@@ -1,0 +1,15 @@
+/* FOOTER */
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    color: var(--light);
+  }
+  .copy {
+    text-align: center;
+    color: var(--light);
+    margin: var(--sp-xl) 0;
+  }
+}

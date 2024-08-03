@@ -1,0 +1,58 @@
+/* ESTILOS DE LA SECCIÓN DE INFORMACIÓN EXTRA (Nº DE FALLECIDOS) */
+.extra-info {
+  padding: var(--sp-3xl);
+  width: 100%;
+  display: grid;
+  grid-template-areas:
+    "info info info bg"
+    "bg2 info2 info2 info2";
+  gap: var(--sp-md);
+  justify-items: stretch;
+  align-items: stretch;
+
+  & > section {
+    background-color: var(--secondary);
+    border-radius: var(--br-xl);
+    padding: var(--sp-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--sp-sm);
+
+    h3,
+    p {
+      color: var(--light);
+      text-align: center;
+      background-color: var(--secondary);
+    }
+
+    h3 {
+      font-size: var(--fs-3extra-large);
+    }
+
+    p {
+      font-size: var(--fs-2large);
+    }
+  }
+
+  & > img {
+    border-radius: var(--br-xl);
+  }
+
+  .img1 {
+    grid-area: bg;
+  }
+
+  .img2 {
+    grid-area: bg2;
+  }
+
+  .sect2 {
+    grid-area: info2;
+  }
+
+  .sect1 {
+    grid-area: info;
+  }
+}

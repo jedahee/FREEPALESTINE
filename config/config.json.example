@@ -1,0 +1,8 @@
+{
+  "emailjsUserId": "",
+  "emailjsServiceId": "",
+  "emailjsTemplateIdUser": "",
+  "emailjsTemplateIdNotification": "",
+  "urlBackend": "backend/save_signature.php",
+  "fpEmail": "youremail@gmail.com"
+}

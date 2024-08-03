@@ -1,0 +1,33 @@
+/* ESTILOS DE LA SECCIÓN INTERIOR DEL SLIDER */
+.tiny-blog {
+  padding: var(--sp-3xl);
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  gap: var(--sp-lg);
+
+  & > section {
+    display: flex;
+    flex-direction: column;
+
+    h3 {
+      font-size: var(--fs-2large);
+      margin: var(--sp-md) 0;
+    }
+
+    p {
+      font-size: var(--fs-large);
+    }
+
+    h3,
+    p {
+      color: var(--light);
+    }
+
+    img {
+      max-height: 804px;
+      border-radius: var(--br-lg);
+    }
+  }
+}

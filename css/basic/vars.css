@@ -1,0 +1,52 @@
+:root {
+  /* Colors */
+  --primary: #d80032;
+  --primary-hover: #b00f35;
+  --secondary: #353751;
+  --light: #edf2f4;
+  --black: #000000;
+  --dark: #2b2d42;
+  --gray: #8d99ae;
+  --success: #4bc586;
+  --gray-hover: #676d77;
+
+  /* Sizes */
+  --fs-base: 16px;
+  --fs-small: 14px;
+  --fs-large: 20px;
+  --fs-2large: 32px;
+  --fs-extra-large: 48px;
+  --fs-2extra-large: 54px;
+  --fs-3extra-large: 64px;
+  --lh-base: 1.5;
+  --lh-text: 1.5em;
+
+  /* Spacing */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 32px;
+  --sp-2xl: 64px;
+  --sp-3xl: 128px;
+
+  /* Border radius */
+  --br-sm: 4px;
+  --br-md: 8px;
+  --br-lg: 16px;
+  --br-xl: 30px;
+
+  /* Shadows */
+  --sh-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --sh-md: 0 3px 6px rgba(0, 0, 0, 0.16);
+  --sh-lg: 0 10px 20px rgba(0, 0, 0, 0.19);
+
+  /* Transitions */
+  --tr-fast: 0.2s;
+  --tr-medium: 0.4s;
+  --tr-slow: 0.6s;
+
+  /* Fonts */
+  --title: "PermanentMarker", sans-serif;
+  --normal-text: "Itim", sans-serif;
+}

@@ -1,0 +1,192 @@
+/* ESTILOS DE LA SECCIÓN DE COMPARTIR, FIRMAR, ENVIAR MENSAJE... */
+.share,
+.contact {
+  width: max-content;
+
+  h2 {
+    color: var(--light);
+    font-size: var(--fs-extra-large);
+    margin-bottom: var(--sp-lg);
+  }
+
+  & > form {
+    gap: var(--sp-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 300px;
+    margin-bottom: var(--sp-xl);
+
+    input {
+      width: 100%;
+    }
+
+    .to-sign,
+    .send-email {
+      text-align: center;
+    }
+  }
+
+  .links {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--sp-sm);
+    /* margin-bottom: var(--sp-lg); */
+  }
+
+  .share__sign__input-container.hidden,
+  .share__networks-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    height: 0;
+  }
+
+  .share__sign__input-container {
+    padding: 0rem 1rem;
+    background: #fff;
+    max-width: 300px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-sm);
+    transition: 0.3s ease;
+    outline: 2px solid transparent;
+
+    & > .input-sign,
+    & > textarea {
+      border: none;
+      outline: none;
+      height: 50px;
+      background-color: transparent;
+    }
+
+    & > .icon.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    & > .icon {
+      margin: 0.6rem 0;
+      transition: 0.3s ease;
+      background-color: var(--dark);
+      padding: 0.8rem;
+      border-radius: var(--br-xl);
+      cursor: pointer;
+      .icon-send {
+        width: 26px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url(../../assets/svg/to-sign.png);
+        height: 26px;
+      }
+    }
+  }
+
+  .share__sign__input-container.correct:is(:hover, :focus) {
+    outline-offset: 3px;
+    outline: 2px solid var(--success);
+    & > .icon {
+      background-color: var(--success);
+    }
+  }
+
+  .share__sign__input-container:is(:hover, :focus) {
+    outline-offset: 3px;
+    outline: 2px solid var(--primary);
+    & > .icon {
+      background-color: var(--primary);
+    }
+  }
+
+  .share__networks-container,
+  .notification__share {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    column-gap: 1rem;
+    transition: 0.3s ease;
+    height: calc(var(--sp-lg) + 36px);
+    margin: var(--sp-sm) 0;
+    margin-left: var(--sp-xs);
+
+    .icon {
+      width: 36px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 36px;
+      cursor: pointer;
+      filter: grayscale(100%);
+      transition: 0.3s ease;
+    }
+
+    .icon-fb {
+      background-image: url(../../assets/svg/facebook.png);
+    }
+
+    .icon-tw {
+      background-image: url(../../assets/svg/twitter.png);
+    }
+
+    .icon-wh {
+      background-image: url(../../assets/svg/whatsapp.png);
+    }
+
+    .icon-lk {
+      background-image: url(../../assets/svg/linkedin.png);
+    }
+
+    .icon:hover {
+      filter: grayscale(0%);
+    }
+  }
+}
+
+#contact_share {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: var(--sp-3xl);
+  justify-items: center;
+  gap: var(--sp-lg);
+
+  .contact {
+    h2 {
+      margin-bottom: 0;
+    }
+
+    p {
+      color: var(--light);
+      margin-bottom: var(--sp-xl);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .msg {
+        border-radius: var(--br-xl);
+        padding: var(--sp-md);
+        textarea {
+          resize: none;
+          height: 200px;
+        }
+      }
+
+      .share__sign__input-container,
+      .btn,
+      textarea {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.share.nt {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+}

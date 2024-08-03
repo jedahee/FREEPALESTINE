@@ -1,0 +1,104 @@
+/* ESTILOS DE LAS NOTIFICACIONES */
+
+.notification {
+  background: var(--light);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 400px;
+  transition: 0.3s ease;
+  border: 2px solid var(--success);
+  z-index: 999;
+  transform: translate(-50%, -50%);
+  padding: var(--sp-lg) var(--sp-lg) var(--sp-xl) var(--sp-lg);
+  border-radius: var(--br-lg);
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2);
+
+  * {
+    color: var(--black);
+    text-align: center;
+  }
+
+  p {
+    background: transparent;
+
+    strong {
+      color: var(--success);
+    }
+  }
+
+  h2 {
+    text-align: center;
+    color: var(--success);
+  }
+
+  .share.nt {
+    margin-bottom: var(--sp-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: var(--light);
+    background-color: var(--success) !important;
+  }
+
+  .btn:hover {
+    background-color: var(--success) !important;
+  }
+}
+
+/* ESONDER NOTIFIACIÓN */
+.notification.hidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.notification.error,
+.notification.cancel {
+  p {
+    margin-bottom: var(--sp-lg);
+  }
+}
+
+/* ESTILOS DE LA NOTIFICACIÓN DE CANCELACIÓN DE FIRMA */
+.notification.cancel {
+  border-color: var(--dark);
+
+  h2 {
+    color: var(--dark);
+  }
+
+  .btn {
+    color: var(--light);
+    background-color: var(--dark) !important;
+  }
+
+  .btn:hover {
+    background-color: var(--dark) !important;
+  }
+}
+
+/* ESTILOS DE LA NOTIFICACIÓN DE ERROR */
+.notification.error {
+  border-color: var(--primary);
+
+  h2 {
+    color: var(--primary);
+  }
+
+  .btn {
+    color: var(--light);
+    background-color: var(--primary) !important;
+  }
+
+  .btn:hover {
+    background-color: var(--primary) !important;
+  }
+}

@@ -1,0 +1,36 @@
+/* ESTILOS DEL ELEMENTO DE CARGA */
+
+.loader-container {
+  transition: 0.3s ease;
+  position: fixed;
+  left: 0;
+  opacity: 1;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+  background-color: #0000006f;
+
+  .loader {
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--light);
+    box-shadow: 0 0 0 0 #0004;
+    animation: l1 1s infinite;
+  }
+}
+
+.loader-container.hidden {
+  opacity: 0;
+  z-index: -1;
+}
+
+@keyframes l1 {
+  100% {
+    box-shadow: 0 0 0 30px #edf2f4bc;
+  }
+}

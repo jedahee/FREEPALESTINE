@@ -1,0 +1,91 @@
+/* Imports */
+
+/* Basic */
+@import url(css/basic/reset.css);
+@import url(css/basic/fonts.css);
+@import url(css/basic/vars.css);
+
+/* Components */
+@import url(css/components/link.css);
+@import url(css/components/loader.css);
+@import url(css/components/popup.css);
+@import url(css/components/notification.css);
+
+/* Sections */
+@import url(css/sections/header.css);
+@import url(css/sections/basic-info.css);
+@import url(css/sections/decorate.css);
+@import url(css/sections/extra-info.css);
+@import url(css/sections/tiny-blog.css);
+@import url(css/sections/share.css);
+@import url(css/sections/footer.css);
+@import url(css/sections/page_not_found.css);
+@import url(css/sections/legal.css);
+
+/* Layout */
+@import url(css/layout/layout.css);
+
+/* Basic styles */
+
+html,
+body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 7px;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+.points::-webkit-scrollbar {
+  height: 0px;
+}
+
+*::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: var(--br-lg);
+}
+
+.points::-webkit-scrollbar-thumb {
+  background-color: var(--light);
+}
+
+body::-webkit-scrollbar-track {
+  border-radius: var(--br-lg);
+  background-color: var(--black);
+}
+
+textarea::-webkit-scrollbar-track {
+  border-radius: var(--br-lg);
+  background-color: transparent;
+}
+
+body,
+p,
+span,
+a {
+  font-family: var(--normal-text);
+  font-size: var(--fs-base);
+  background-color: var(--dark);
+  line-height: var(--lh-base);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--title);
+}
+
+img {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+.flag-palestine {
+  background-image: url(assets/svg/flag-palestine.jpg);
+}

@@ -1,0 +1,43 @@
+/* ESTILOS DE ENLACES / BOTONES */
+
+/* ESTILOS POR DEFECTO */
+.btn {
+  background: transparent;
+  text-decoration: none;
+  color: var(--light);
+  padding: var(--sp-sm) var(--sp-md);
+  border: 2px solid var(--light);
+  border-radius: var(--br-xl);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:not(.btn-second):not(.btn-primary):hover {
+  background-color: var(--light);
+  color: var(--primary);
+}
+
+/* BOTÓN SECUNDARIO */
+.btn-second {
+  background-color: var(--gray);
+  border: none;
+}
+
+.btn-second.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.btn-second:hover {
+  background-color: var(--primary);
+}
+
+/* BOTÓN PRIMARIO */
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border: none;
+}

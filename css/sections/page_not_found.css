@@ -1,0 +1,33 @@
+/* ESTILOS DE LA PÁGINA 404, PÁGINA NO ENCONTRADA */
+.pnf_body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+
+  h1,
+  h2,
+  p {
+    text-align: center;
+    color: var(--light);
+    line-height: 49px;
+    margin-bottom: var(--sp-md);
+  }
+
+  h1,
+  h2 {
+    font-size: var(--fs-extra-large);
+    color: var(--primary);
+  }
+
+  p {
+    margin-bottom: var(--sp-xl);
+  }
+
+  img {
+    width: 128px;
+    filter: inherit;
+    margin-bottom: var(--sp-2xl);
+  }
+}
