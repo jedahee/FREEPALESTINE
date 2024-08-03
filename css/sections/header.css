@@ -15,6 +15,15 @@ header {
     font-size: 12.5vw;
   }
 
+  .arrows {
+    background-image: url(../../assets/svg/scroll.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 10px;
+    width: 50px;
+  }
+
   nav {
     display: flex;
     justify-content: space-between;
