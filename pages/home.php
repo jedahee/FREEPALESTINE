@@ -1,36 +1,9 @@
 <?php 
-// TODO: Obtener reCAPTCHA v2 e implementar en JS nativo  
-// -TODO: Crear plantillas en EmailJS (notifiación y usuario) y obtener IDs 
-// -TODO: Establecer IDs en el archivo "config.json"
-// -TODO: Configurar en JS para obtener los valores de "config.json"
-// -TODO: Terminar código de configuración JS para enviar correos con EmailJS y comprobar si funciona correctamente
-// -TODO: Maquetar correctamente plantillas
-// -TODO: Añadir a la plantilla del correo que le llega al usuario el enlace para completar la firma
-// -TODO: Maquetar notificaciones de "Se ha enviado un correo / Ya has firmado con este correo o nombre..."
-// TODO: Revisar y retocar diseño actual + Hacer responsive (Timeline con metas)
-// TODO: Hosting, subir a github pages, valorar adquirir dominio 
-// TODO: Crear documentos legales (Subir a pro)
-// -TODO: Modificar footer para añadir documentos legales (Actualizar en pro)
-// -TODO: Crear directorio /legal para añadir los documentos legales (Antes de subir a pro)
-// -TODO: Organizar archivos y crear mejor estructura del proyecto (Actualizar en pro)
-// -TODO: Hacer 404.php + diseño
-// -TODO: Configurar .htaccess para que rediriga a 404.php
-// -TODO: Crear pequeño routing en el index.php
-// TODO: Documentar todo el proyecto y código (Readme.md, comentarios)(Actualizar en pro) - BUSCAR ALGUNA PEQUEÑA LIBERIA PARA DOCUMENTACIÓN (Antes de subir a pro)
-// -TODO: Implementar libreria AOS
-// -TODO: Terminar sección de contacto
-// -TODO: Programar Cancelar firma
-// -TODO: Configurar notificacion de la home para "Cancelar firma"  
-// -TODO: Cambiar la forma de guardar las cadenas aleatorias de seguridad para validar los emails (se guardan en sesiones php, deben guardarse en otro archivo json de forma temporal, hasta que se cancela la firma)
-// -TODO: Crear sistema de metas/objetivos y que la home los lea (dentro de /backend/goals.php)
-// -TODO: En la parte de objetivos, crear línea verde que siga el progreso
-// -TODO: Crear directorio /pages e introducir ahí las páginas home y 404 (Actualizar URLs)
-// -TODO: Crear dentro de /backend/ el archivo utils.php con funciones a reutilizar
-
 require_once 'backend/load_env.php';
 require_once 'backend/utils.php';
 require_once 'backend/goals.php';
 
+// Firmas totales
 $total_signatures = count(Utils::readJsonFile('backend/' . getenv('FILENAME_JSON')));
 $total_signatures_aux = count(Utils::readJsonFile('backend/' . getenv('FILENAME_JSON')));
 ?>
@@ -151,6 +124,9 @@ $total_signatures_aux = count(Utils::readJsonFile('backend/' . getenv('FILENAME_
       <div data-aos-duration="1000" data-aos="zoom-out-right" class="signature-line">
         <h2>Objetivos</h2>
         <p>Cada firma es importante para cumplir las metas establecidas</p>
+        <div class="arrows">
+          
+        </div>
         <div class="points">
 
           <?php
