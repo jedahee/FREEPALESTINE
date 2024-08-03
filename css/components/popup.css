@@ -73,5 +73,5 @@
 
 /* ESCONDER NOT. FLOTANTE */
 .popup.hidden {
-  transform: translateX(-50%) translateY(-100px);
+  transform: translateX(-50%) translateY(-140%);
 }
