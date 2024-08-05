@@ -10,19 +10,19 @@ function goals() {
         ],
         [
             "signatures"=> 500,
-            "goal_txt"=> "Paquete de stickers gratuitos de FREEPALESTINE para difundir el proyecto"
+            "goal_txt"=> ""
         ],
         [
             "signatures"=> 1000,
-            "goal_txt"=> "Carta a las organizaciones sindicales  y movimientos con las firmas reunidas para contar con su apoyo"
+            "goal_txt"=> ""
         ],
         [
             "signatures"=> 2500,
-            "goal_txt"=> "Carta a las instituciones provinciales y autonómicas juntando todo el apoo obtenido"
+            "goal_txt"=> ""
         ],
         [
             "signatures"=> 5000,
-            "goal_txt"=> "Carta a las instituciones provinciales y autonómicas juntando todo el apoo obtenido"
+            "goal_txt"=> ""
         ],
     ];
 }
