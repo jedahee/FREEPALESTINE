@@ -132,13 +132,13 @@ $total_signatures_aux = count(Utils::readJsonFile('backend/' . getenv('FILENAME_
           <?php
             foreach($goals as $index=>$goal) {
               ?>
-              <section class="point <?php echo $index > 0 && !$is_last_goal_success ? 'hidden' : ''; ?> <?php echo $total_signatures >= $goal["signatures"] ? 'success' : ''; ?>">
+              <section class="point <?php echo $index > 0 && !$is_last_goal_success && $index > $last_goal_index + 3 ? 'hidden' : ''; ?> <?php echo $total_signatures >= $goal["signatures"] ? 'success' : ''; ?>">
                 <?php $sign_word = $goal["signatures"] > 1 ? 'FIRMAS' : 'FIRMA'; ?>
                 <h3><?php echo $goal["signatures"] . " " . $sign_word; ?></h3>
-                <p><?php echo $index > 0 && !$is_last_goal_success ? 'XXX XX XXX XX XXX XX XXX XX' : $goal["goal_txt"]; ?></p>
+                <p><?php echo $index > 0 && !$is_last_goal_success && $index > $last_goal_index + 2  ? 'XXX XX XXX XX XXX XX XXX XX' : $goal["goal_txt"]; ?></p>
                 
                 <?php
-                    if ($index > 0 && ($is_last_goal_success || $index = $last_goal_index + 1)) {
+                    if ($index > 0 && ($is_last_goal_success || $index < $last_goal_index + 3)) {
                       
                       if ($total_signatures >= $goal["signatures"])
                         $percent = round((100 * 100) / 185, 2);
