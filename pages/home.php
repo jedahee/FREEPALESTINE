@@ -135,7 +135,7 @@ $total_signatures_aux = count(Utils::readJsonFile('backend/' . getenv('FILENAME_
               <section class="point <?php echo $index > 0 && !$is_last_goal_success && $index > $last_goal_index + 3 ? 'hidden' : ''; ?> <?php echo $total_signatures >= $goal["signatures"] ? 'success' : ''; ?>">
                 <?php $sign_word = $goal["signatures"] > 1 ? 'FIRMAS' : 'FIRMA'; ?>
                 <h3><?php echo $goal["signatures"] . " " . $sign_word; ?></h3>
-                <p><?php echo $index > 0 && !$is_last_goal_success && $index > $last_goal_index + 2  ? 'XXX XX XXX XX XXX XX XXX XX' : $goal["goal_txt"]; ?></p>
+                <p><?php echo $index > 0 && !$is_last_goal_success && $index > $last_goal_index + 3 ? 'XXX XX XXX XX XXX XX XXX XX' : $goal["goal_txt"]; ?></p>
                 
                 <?php
                     if ($index > 0 && ($is_last_goal_success || $index < $last_goal_index + 3)) {
