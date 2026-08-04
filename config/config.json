@@ -1,0 +1,4 @@
+{
+  "urlBackend": "backend/save_signature.php",
+  "emailProxy": "backend/send_email.php"
+}

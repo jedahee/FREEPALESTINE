@@ -1,0 +1,19 @@
+RewriteEngine On
+
+# Fuerza HTTPS en producción, pero nunca en local (localhost/127.0.0.1)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Protect .env files and config directory
+RewriteRule ^backend/config/ - [F,L]
+RewriteRule ^\.env - [F,L]
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirige todas las solicitudes a index.php
+RewriteRule ^(.*)$ index.php [QSA,L]

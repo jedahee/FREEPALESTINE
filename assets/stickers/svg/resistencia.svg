@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="gText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e8eef5"/>
+    </linearGradient>
+    <linearGradient id="gRed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff5a76"/>
+      <stop offset="100%" stop-color="#b0132f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="shadowHard" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="3" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <text x="256" y="286" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="84" font-weight="900" fill="url(#gText)" stroke="#141414" stroke-width="8" letter-spacing="2" filter="url(#shadow)" paint-order="stroke">RESISTENCIA</text>
+  <g filter="url(#shadowHard)">
+    <rect x="88" y="338" width="100" height="16" rx="8" fill="#141414"/>
+    <rect x="210" y="338" width="92" height="16" rx="8" fill="#ffffff" stroke="#141414" stroke-width="4"/>
+    <rect x="324" y="338" width="100" height="16" rx="8" fill="#0a7a3d"/>
+  </g>
+  <path d="M256 376 L212 402 L232 368 L256 340 L280 368 L300 402 Z" fill="url(#gRed)" stroke="#141414" stroke-width="6" stroke-linejoin="round" filter="url(#shadowHard)"/>
+  <rect x="246" y="390" width="20" height="46" rx="6" fill="url(#gRed)" stroke="#141414" stroke-width="6" filter="url(#shadowHard)"/>
+</svg>

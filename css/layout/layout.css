@@ -1,0 +1,6 @@
+@media screen and (max-width: 768px) {
+  h2:not(.notification h2) {
+    font-size: calc(var(--fs-h1) - 6px) !important;
+    margin-bottom: var(--sp-xl) !important;
+  }
+}

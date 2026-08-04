@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <pattern id="keff" width="44" height="44" patternUnits="userSpaceOnUse">
+      <rect width="44" height="44" fill="#f7f5ee"/>
+      <path d="M0 0H44V44" fill="none" stroke="#141414" stroke-width="6"/>
+      <path d="M0 22H44M22 0V44" stroke="#141414" stroke-width="4"/>
+      <rect x="0" y="0" width="22" height="22" fill="#141414"/>
+      <path d="M11 5l6 6-6 6-6-6z" fill="#f7f5ee"/>
+      <rect x="22" y="22" width="22" height="22" fill="#141414"/>
+      <path d="M33 27l6 6-6 6-6-6z" fill="#f7f5ee"/>
+    </pattern>
+    <linearGradient id="gSkin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f2c191"/>
+      <stop offset="100%" stop-color="#d99c67"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <path d="M104 512 Q116 428 256 412 Q396 428 408 512 Z" fill="#14241a" stroke="#141414" stroke-width="8" stroke-linejoin="round"/>
+
+    <path d="M168 250 Q148 322 118 416 L146 416 Q166 334 182 252 Z" fill="url(#keff)" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <g stroke="#141414" stroke-width="5" stroke-linecap="round">
+      <line x1="122" y1="416" x2="122" y2="432"/><line x1="130" y1="416" x2="130" y2="432"/>
+      <line x1="138" y1="416" x2="138" y2="432"/><line x1="146" y1="416" x2="146" y2="432"/>
+    </g>
+    <path d="M344 250 Q364 322 394 416 L366 416 Q346 334 330 252 Z" fill="url(#keff)" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <g stroke="#141414" stroke-width="5" stroke-linecap="round">
+      <line x1="366" y1="416" x2="366" y2="432"/><line x1="374" y1="416" x2="374" y2="432"/>
+      <line x1="382" y1="416" x2="382" y2="432"/><line x1="390" y1="416" x2="390" y2="432"/>
+    </g>
+
+    <rect x="232" y="392" width="48" height="44" rx="14" fill="#d99c67" stroke="#141414" stroke-width="7"/>
+
+    <ellipse cx="256" cy="330" rx="96" ry="112" fill="url(#gSkin)" stroke="#141414" stroke-width="9"/>
+    <path d="M178 338 C174 398 210 448 256 448 C302 448 338 398 334 338 C312 352 200 352 178 338 Z" fill="#5c3a24" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M232 346 Q256 328 280 346 Q256 364 232 346 Z" fill="#2f1d10" stroke="#141414" stroke-width="5" stroke-linejoin="round"/>
+
+    <ellipse cx="210" cy="316" rx="10" ry="7" fill="#1a1a1a"/>
+    <ellipse cx="302" cy="316" rx="10" ry="7" fill="#1a1a1a"/>
+    <circle cx="213" cy="314" r="3" fill="#ffffff"/>
+    <circle cx="305" cy="314" r="3" fill="#ffffff"/>
+    <rect x="192" y="294" width="32" height="8" rx="4" fill="#141414"/>
+    <rect x="288" y="294" width="32" height="8" rx="4" fill="#141414"/>
+    <path d="M252 322 Q256 344 256 352 L260 322 Z" fill="none" stroke="#a9743f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M246 380 Q256 388 266 380" fill="none" stroke="#241308" stroke-width="6" stroke-linecap="round"/>
+
+    <path d="M160 252 A98 162 0 0 1 352 252 A98 16 0 0 1 160 252 Z" fill="url(#keff)" stroke="#141414" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M160 252 Q256 282 352 252 L352 272 Q256 304 160 272 Z" fill="#141414" stroke="#000000" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,68 @@
+:root {
+  /* Fonts */
+  --font-display: "BebasNeue", Impact, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Type scale (fluid) */
+  --fs-display: clamp(3rem, 8vw, 6.5rem);   /* Hero h1 */
+  --fs-h1: clamp(2rem, 5vw, 3.5rem);         /* Section titles */
+  --fs-h2: clamp(1.5rem, 3vw, 2.25rem);      /* Sub-section titles */
+  --fs-h3: clamp(1.125rem, 2vw, 1.5rem);     /* Card titles */
+  --fs-base: 1rem;                            /* Body */
+  --fs-large: 1.125rem;                       /* Body lead */
+  --fs-small: 0.875rem;                       /* Secondary text */
+  --fs-caption: 0.75rem;                      /* Labels, legal */
+
+  /* Weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Letter-spacing */
+  --ls-tight: -0.02em;
+  --ls-normal: 0;
+  --ls-wide: 0.05em;
+  --ls-wider: 0.15em;
+
+  /* Line-height */
+  --lh-display: 1.05;
+  --lh-heading: 1.2;
+  --lh-body: 1.6;
+
+  /* Colors */
+  --primary: #d80032;
+  --primary-hover: #b00f35;
+  --secondary: #353751;
+  --light: #edf2f4;
+  --black: #000000;
+  --dark: #2b2d42;
+  --gray: #8d99ae;
+  --success: #4bc586;
+  --gray-hover: #676d77;
+
+  /* Spacing */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 32px;
+  --sp-2xl: 64px;
+  --sp-3xl: 128px;
+
+  /* Border radius */
+  --br-sm: 4px;
+  --br-md: 8px;
+  --br-lg: 16px;
+  --br-xl: 30px;
+
+  /* Shadows */
+  --sh-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --sh-md: 0 3px 6px rgba(0, 0, 0, 0.16);
+  --sh-lg: 0 10px 20px rgba(0, 0, 0, 0.19);
+
+  /* Transitions */
+  --tr-fast: 0.2s;
+  --tr-medium: 0.4s;
+  --tr-slow: 0.6s;
+}

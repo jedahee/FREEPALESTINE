@@ -1,0 +1,36 @@
+.pnf_body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--sp-xl);
+  background: #0e0e12;
+  text-align: center;
+
+  h1,
+  h2,
+  p {
+    text-align: center;
+    color: var(--light);
+    line-height: 49px;
+    margin-bottom: var(--sp-md);
+  }
+
+  h1,
+  h2 {
+    font-size: var(--fs-h1);
+    color: var(--primary);
+    font-family: var(--font-display);
+  }
+
+  p {
+    margin-bottom: var(--sp-xl);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  img {
+    width: 128px;
+    margin-bottom: var(--sp-2xl);
+  }
+}

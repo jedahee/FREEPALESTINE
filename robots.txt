@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Backend interno: scripts de firma, envío de correo, datos y configuración
+Disallow: /backend/
+Disallow: /backend/config/
+Disallow: /backend/data/
+Disallow: /backend/logs/
+Disallow: /config/
+
+# Archivos sensibles y de configuración
+Disallow: /*.json$
+Disallow: /*.log$
+Disallow: /*.env$
+Disallow: /*.env.*
+Disallow: /*.sql$
+Disallow: /*.bak$
+Disallow: /*.old$
+Disallow: /*.backup$
+Disallow: /*.zip$
+Disallow: /*.gz$
+Disallow: /*.txt$
+
+# Directorios ocultos
+Disallow: /.*/
+
+Sitemap: https://freepalestine.es/sitemap.xml
