@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/load_env.php';
+
 class Utils {
     public static function get_base_url() {
         // URL base explícita (recomendada en producción: p. ej. https://freepalestine.es)
