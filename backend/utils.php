@@ -1,7 +1,19 @@
 <?php
 class Utils {
     public static function get_base_url() {
-        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+        // URL base explícita (recomendada en producción: p. ej. https://freepalestine.es)
+        $configured = getenv('BASE_URL');
+        if ($configured) {
+            return rtrim($configured, '/');
+        }
+
+        $https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        if (!$https) {
+            $forwarded = strtolower(trim($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''));
+            $cf_visitor = $_SERVER['HTTP_CF_VISITOR'] ?? '';
+            $https = $forwarded === 'https' || strpos($cf_visitor, '"https"') !== false;
+        }
+        $scheme = $https ? 'https' : 'http';
 
         $allowed_hosts = explode(',', getenv('ALLOWED_HOSTS') ?: 'localhost,127.0.0.1');
         $host = $_SERVER['HTTP_HOST'] ?? '';
@@ -11,9 +23,7 @@ class Utils {
             $host = 'localhost';
         }
 
-        $base_url = $scheme . "://" . $host;
-
-        return $base_url;
+        return $scheme . "://" . $host;
     }
 
     public static function log($event, $details = '') {
