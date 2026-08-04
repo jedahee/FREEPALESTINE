@@ -1,0 +1,136 @@
+/* Imports */
+
+/* Basic */
+@import url(css/basic/reset.css);
+@import url(css/basic/fonts.css);
+@import url(css/basic/vars.css);
+
+/* Components */
+@import url(css/components/link.css);
+@import url(css/components/loader.css);
+@import url(css/components/popup.css);
+@import url(css/components/notification.css);
+
+/* Sections */
+@import url(css/sections/header.css);
+@import url(css/sections/basic-info.css);
+@import url(css/sections/decorate.css);
+@import url(css/sections/extra-info.css);
+@import url(css/sections/tiny-blog.css);
+@import url(css/sections/resources.css);
+@import url(css/sections/share.css);
+@import url(css/sections/footer.css);
+@import url(css/sections/page_not_found.css);
+@import url(css/sections/legal.css);
+
+/* Layout */
+@import url(css/layout/layout.css);
+
+/* Basic styles */
+
+html,
+body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 7px;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: var(--br-lg);
+}
+
+body::-webkit-scrollbar-track {
+  border-radius: var(--br-lg);
+  background-color: var(--black);
+}
+
+textarea::-webkit-scrollbar-track {
+  border-radius: var(--br-lg);
+  background-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-body);
+  color: var(--light);
+  background-color: #0e0e12;
+  text-rendering: optimizeLegibility;
+}
+
+p,
+li {
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+}
+
+h1 {
+  font-size: var(--fs-h1);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+}
+
+h3 {
+  font-size: var(--fs-h3);
+}
+
+h4,
+h5,
+h6 {
+  font-size: var(--fs-large);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+a {
+  font-family: var(--font-body);
+  color: inherit;
+}
+
+strong {
+  font-weight: var(--fw-bold);
+}
+
+img.grayscale {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.protest-bg {
+  background-image: url(assets/images/image3.jpg);
+}
