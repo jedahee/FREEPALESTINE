@@ -104,18 +104,6 @@ El proyecto se despliega por git y está preparado para que local y producción 
 - **Backup de datos**: copia `backend/data/*.json` con regularidad. Es tu única fuente de verdad de las firmas.
 - **Permisos**: el usuario del servidor web debe poder escribir en `backend/data/` y `backend/logs/` (p. ej. `chown -R www-data:www-data backend/data backend/logs`).
 
-### Despliegue típico por git
-
-```sh
-# en local, tras cambios:
-git add -A && git commit -m "..." && git push origin main
-
-# en producción (dentro del checkout del repo):
-git pull
-php -l backend/*.php index.php        # lint rápido
-# revisar backend/logs/security-*.log  si algo falla
-```
-
 > La configuración (`.env`) y los datos (`backend/data/`) viven solo en cada servidor; nunca se sobrescriben en un `git pull`.
 
 ## Contribución
@@ -141,7 +129,6 @@ Si deseas contribuir al proyecto, por favor sigue estos pasos:
 
 - **Regenerar stickers PNG**: exporta desde los SVG de `assets/stickers/svg/` con **librsvg** (`rsvg-convert` o Python `gi Rsvg`) para conservar la transparencia. ImageMagick (sin `rsvg-convert`) aplanaba el fondo a blanco.
 - **Entorno local**: `php -S 127.0.0.1:8000 .router.php` (el `.htaccess` no aplica con el built-in server).
-- La doc detallada de sesión y referencia rápida está en `.opencode/`.
 
 ## Seguridad
 
