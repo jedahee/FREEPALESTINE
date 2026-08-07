@@ -29,6 +29,11 @@
     transform: translateY(-1px);
   }
 
+  &.to-sign:not(.disabled) {
+    background: var(--primary);
+    color: var(--light);
+  }
+
   &.disabled {
     pointer-events: none;
     opacity: 0.35;
