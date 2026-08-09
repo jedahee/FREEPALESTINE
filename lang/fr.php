@@ -312,4 +312,12 @@ return [
         'popup_recaptcha' => 'Il y a un problème avec le recaptcha.',
         'popup_sent' => 'Un e-mail de confirmation a été envoyé',
     ],
+    'error404' => [
+        'title' => 'Page introuvable',
+        'desc' => 'Désolé, la page que vous recherchez n\'existe pas.',
+        'btn' => 'Retour à l\'accueil',
+        'meta_description' => 'La page que vous recherchez n\'existe pas sur Free Palestine.',
+        'meta_og_title' => 'Page introuvable — Free Palestine',
+        'meta_og_description' => 'La page que vous recherchez n\'existe pas. Retournez à l\'accueil et continuez de soutenir la cause palestinienne.',
+    ],
 ];

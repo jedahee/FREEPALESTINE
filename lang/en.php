@@ -312,4 +312,12 @@ return [
         'popup_recaptcha' => 'There is a problem with the recaptcha.',
         'popup_sent' => 'A confirmation email has been sent',
     ],
+    'error404' => [
+        'title' => 'Page not found',
+        'desc' => 'Sorry, the page you are looking for does not exist.',
+        'btn' => 'Back to home',
+        'meta_description' => 'The page you are looking for does not exist on Free Palestine.',
+        'meta_og_title' => 'Page not found — Free Palestine',
+        'meta_og_description' => 'The page you are looking for does not exist. Go back home and keep supporting the Palestinian cause.',
+    ],
 ];

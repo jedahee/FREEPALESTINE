@@ -312,4 +312,12 @@ return [
         'popup_recaptcha' => 'Hay un problema con el recaptcha.',
         'popup_sent' => 'Se ha enviado un correo de confirmación',
     ],
+    'error404' => [
+        'title' => 'Página no encontrada',
+        'desc' => 'Lo sentimos, la página que buscas no existe.',
+        'btn' => 'Volver al inicio',
+        'meta_description' => 'La página que buscas no existe en Free Palestine.',
+        'meta_og_title' => 'Página no encontrada — Free Palestine',
+        'meta_og_description' => 'La página que buscas no existe. Vuelve al inicio y sigue apoyando la causa palestina.',
+    ],
 ];
