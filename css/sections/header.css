@@ -250,7 +250,7 @@ header.hero {
 
   .milestone-stats {
     position: relative;
-    z-index: 1;
+    z-index: 0;
     display: flex;
     gap: var(--sp-lg);
     margin-top: var(--sp-xl);
@@ -489,9 +489,21 @@ header.hero {
 @media (max-width: 575px) {
   header.hero {
     .hero-top-bar {
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
 
-      .lang-switcher__name {
+      .date {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .lang-switcher {
+        flex-shrink: 0;
+      }
+
+      .lang-switcher__trigger .lang-switcher__name {
         display: none;
       }
 
