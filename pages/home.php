@@ -96,6 +96,7 @@ try {
       <link rel="alternate" hreflang="<?php echo $link['hreflang']; ?>" href="<?php echo $link['url']; ?>">
     <?php endforeach; ?>
     <meta name="theme-color" content="#d80032">
+    <link rel="preconnect" href="https://data.techforpalestine.org">
     <!-- /META KEYS -->
 
     <!-- FAVICON -->
@@ -160,25 +161,25 @@ try {
             "name" => t('basic_info.stories.1.title'),
             "description" => t('basic_info.stories.1.desc'),
             "url" => $story_links[0],
-            "image" => "assets/images/image7.jpg"
+            "image" => "assets/images/image7.webp"
         ],
         [
             "name" => t('basic_info.stories.2.title'),
             "description" => t('basic_info.stories.2.desc'),
             "url" => $story_links[1],
-            "image" => "assets/images/image5.jpg"
+            "image" => "assets/images/image5.webp"
         ],
         [
             "name" => t('basic_info.stories.3.title'),
             "description" => t('basic_info.stories.3.desc'),
             "url" => $story_links[2],
-            "image" => "assets/images/image6.png"
+            "image" => "assets/images/image6.webp"
         ],
         [
             "name" => t('basic_info.stories.4.title'),
             "description" => t('basic_info.stories.4.desc'),
             "url" => $story_links[3],
-            "image" => "assets/images/image1.png"
+            "image" => "assets/images/image1.webp"
         ]
     ];
 
@@ -570,7 +571,7 @@ try {
             <div class="moments-grid">
               <article class="moment-card">
                 <a class="moment-card__link" href="<?php echo $story_links[0]; ?>" target="_blank" rel="noopener" title="<?php echo Utils::e(t('basic_info.stories.1.title_attr')); ?>">
-                  <img src="assets/images/image7.jpg" alt="<?php echo Utils::e(t('basic_info.stories.1.title')); ?>" />
+                  <img src="assets/images/image7.webp" alt="<?php echo Utils::e(t('basic_info.stories.1.title')); ?>" />
                   <div class="moment-caption">
                     <h3><?php echo t('basic_info.stories.1.title'); ?></h3>
                     <p><?php echo t('basic_info.stories.1.desc'); ?></p>
@@ -580,7 +581,7 @@ try {
               </article>
               <article class="moment-card">
                 <a class="moment-card__link" href="<?php echo $story_links[1]; ?>" target="_blank" rel="noopener" title="<?php echo Utils::e(t('basic_info.stories.2.title_attr')); ?>">
-                  <img src="assets/images/image5.jpg" alt="<?php echo Utils::e(t('basic_info.stories.2.title')); ?>" />
+                  <img src="assets/images/image5.webp" alt="<?php echo Utils::e(t('basic_info.stories.2.title')); ?>" />
                   <div class="moment-caption">
                     <h3><?php echo t('basic_info.stories.2.title'); ?></h3>
                     <p><?php echo t('basic_info.stories.2.desc'); ?></p>
@@ -590,7 +591,7 @@ try {
               </article>
               <article class="moment-card">
                 <a class="moment-card__link" href="<?php echo $story_links[2]; ?>" target="_blank" rel="noopener" title="<?php echo Utils::e(t('basic_info.stories.3.title_attr')); ?>">
-                  <img src="assets/images/image6.png" alt="<?php echo Utils::e(t('basic_info.stories.3.title')); ?>" />
+                  <img src="assets/images/image6.webp" alt="<?php echo Utils::e(t('basic_info.stories.3.title')); ?>" />
                   <div class="moment-caption">
                     <h3><?php echo t('basic_info.stories.3.title'); ?></h3>
                     <p><?php echo t('basic_info.stories.3.desc'); ?></p>
@@ -600,7 +601,7 @@ try {
               </article>
               <article class="moment-card">
                 <a class="moment-card__link" href="<?php echo $story_links[3]; ?>" target="_blank" rel="noopener" title="<?php echo Utils::e(t('basic_info.stories.4.title_attr')); ?>">
-                  <img src="assets/images/image1.png" alt="<?php echo Utils::e(t('basic_info.stories.4.title')); ?>" />
+                  <img src="assets/images/image1.webp" alt="<?php echo Utils::e(t('basic_info.stories.4.title')); ?>" />
                   <div class="moment-caption">
                     <h3><?php echo t('basic_info.stories.4.title'); ?></h3>
                     <p><?php echo t('basic_info.stories.4.desc'); ?></p>

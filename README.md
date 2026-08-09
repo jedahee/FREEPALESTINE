@@ -130,6 +130,44 @@ Si deseas contribuir al proyecto, por favor sigue estos pasos:
 - **Regenerar stickers PNG**: exporta desde los SVG de `assets/stickers/svg/` con **librsvg** (`rsvg-convert` o Python `gi Rsvg`) para conservar la transparencia. ImageMagick (sin `rsvg-convert`) aplanaba el fondo a blanco.
 - **Entorno local**: `php -S 127.0.0.1:8000 .router.php` (el `.htaccess` no aplica con el built-in server).
 
+## Optimización de CSS (build)
+
+El CSS se sirve en **un solo archivo** (`style.css`, sin `@import` ni requests en cascada) generado a partir de los módulos. **Edita siempre los módulos** en `css/`, nunca `style.css` directamente.
+
+- `css/style.src.css` = fuente: `@import`s de los módulos + reglas globales (variables, tipografía, overlay).
+- `build-css.php` = concatenador: lee la fuente, reemplaza `../../assets/` por `assets/` (las rutas son relativas al nuevo archivo), e inyecta el contenido de cada `@import` en orden (RTL al final).
+
+**Workflow**:
+
+```sh
+# 1. Edita los módulos en css/ (p. ej. css/sections/header.css)
+# 2. Regenera style.css
+php build-css.php
+# 3. Verifica en local: php -S 127.0.0.1:8000 .router.php
+```
+
+`build-css.php` y `css/style.src.css` están en git para que el build sea reproducible en cualquier entorno (PHP 7+).
+
+## Imágenes WebP (recomendaciones)
+
+Todas las imágenes servidas son **WebP** (junto a la caché de 1 año del `.htaccess`, esto evita re-descargar y reduce el peso inicial):
+
+- **Generar con ImageMagick**: `convert entrada.png -resize 800x -quality 88 -strip salida.webp`. En este proyecto se usa 756px de ancho máximo para las tarjetas de historias y 800px para el fondo.
+- **Ahorro conseguido aquí**: del 28% al 88% por imagen respecto a PNG/JPG originales (la imagen principal pasó de 212KB a 24KB).
+- **No usar `<picture>` con fallback**: los navegadores modernos soportan WebP; un `<img src="*.webp">` directo ahorra HTML y descarta la descarga doble.
+- **Calidad 88 como equilibrio**: por debajo se ven artefactos en fotos con degradados; por encima apenas se gana calidad.
+- **No subir originales**: borra los PNG/JPG fuente tras generar el WebP (este repo elimina `main_image.jpg` de 2.7MB, `image2.png` de 13MB y los `pattern.*`).
+
+## Video del hero (optimización)
+
+`assets/video/video-palestine-home-3.mp4` está re-codificado a **720p H.264 (~655 kbps)** con ffmpeg, pasando de **6.3MB a 1.4MB (-78%)** sin pérdida perceptible gracias al overlay oscuro:
+
+```sh
+ffmpeg -i original.mp4 -vf "scale=1280:-2" -c:v libx264 -preset slow -crf 32 -c:a aac -b:a 96k -movflags +faststart -an video-720p.mp4
+```
+
+Criterios: CRF 32 para fondo con scrim (hasta ~2.3MB con CRF 28 si se aprecia pérdida en pantallas grandes), `-movflags +faststart` para playback inmediato y `-an` porque el hero va silenciado.
+
 ## Seguridad
 
 - Las firmas se cifran con AES-256-CBC antes de almacenarse.
