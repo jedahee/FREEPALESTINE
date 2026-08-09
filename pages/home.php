@@ -297,34 +297,25 @@ try {
     {
       "@context": "https://schema.org",
       "@type": "Dataset",
-      "name": "Víctimas del genocidio en Gaza",
-      "description": "Cifras de palestinos asesinados y niños asesinados en Gaza, actualizadas desde data.techforpalestine.org.",
+      "name": "<?php echo Utils::e(t('meta.casualties_name')); ?>",
+      "description": "<?php echo Utils::e(t('meta.casualties_desc')); ?>",
       "url": "https://data.techforpalestine.org/",
-      "inLanguage": "es",
+      "inLanguage": "<?php echo current_lang(); ?>",
       "creator": {
-        "@type": "Organization",
-        "name": "Tech for Palestine",
-        "url": "https://data.techforpalestine.org/"
+        "@id": "<?php echo $base_url; ?>/#organization"
       },
       "publisher": {
-        "@type": "Organization",
-        "name": "Free Palestine",
-        "url": "<?php echo $base_url; ?>/"
-      },
-      "sourceOrganization": {
-        "@type": "Organization",
-        "name": "Tech for Palestine",
-        "url": "https://data.techforpalestine.org/"
+        "@id": "<?php echo $base_url; ?>/#organization"
       },
       "variableMeasured": [
         {
           "@type": "PropertyValue",
-          "name": "Palestinos asesinados",
+          "name": "<?php echo Utils::e(t('meta.casualties_killed')); ?>",
           "value": <?php echo $casualties['killed']; ?>
         },
         {
           "@type": "PropertyValue",
-          "name": "Niños asesinados",
+          "name": "<?php echo Utils::e(t('meta.casualties_children')); ?>",
           "value": <?php echo $casualties['children']; ?>
         }
       ]
