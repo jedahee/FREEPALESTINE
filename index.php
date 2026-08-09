@@ -2,9 +2,16 @@
 // Ruta a tu archivo 404.php
 define('ERROR_404_PAGE', __DIR__ . '/pages/404.php');
 
-// Obtener la ruta solicitada
-$route = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+require_once __DIR__ . '/backend/i18n.php';
 
+// Detectar idioma por prefijo de URL (/es, /en, /fr, /pt, /ar)
+i18n_init();
+
+// Redirige automáticamente al idioma del navegador si entras sin idioma explícito
+i18n_maybe_redirect();
+
+// Obtener la ruta solicitada sin el prefijo de idioma
+$route = clean_route();
 
 // Aquí decides qué hacer con base en la URL solicitada
 switch ($route) {

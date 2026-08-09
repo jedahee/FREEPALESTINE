@@ -19,12 +19,16 @@
 @import url(css/sections/tiny-blog.css);
 @import url(css/sections/resources.css);
 @import url(css/sections/share.css);
+@import url(css/sections/social.css);
 @import url(css/sections/footer.css);
 @import url(css/sections/page_not_found.css);
 @import url(css/sections/legal.css);
 
 /* Layout */
 @import url(css/layout/layout.css);
+
+/* RTL overrides (debe ir al final para ganar a las demás reglas) */
+@import url(css/basic/rtl.css);
 
 /* Basic styles */
 

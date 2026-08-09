@@ -3,6 +3,30 @@ const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 const api_endpoint = "https://data.techforpalestine.org/api/v3/summary.json";
 const url_config = "config/config.json";
 
+// Traducciones inyectadas por el servidor (window.I18N) + idioma actual
+const I18N = window.I18N || {};
+const currentLang = document.documentElement.lang || "es";
+
+// Traduce una clave de window.I18N sustituyendo {param}. Fallback: español (el es.js siempre está).
+function t(key, params) {
+  let msg = I18N[key] || key;
+  if (params) {
+    for (const k in params) {
+      msg = msg.split("{" + k + "}").join(params[k]);
+    }
+  }
+  return msg;
+}
+
+// Formatea un número con el separador de miles del idioma actual (igual que t_num en PHP).
+const numSeparators = {
+  es: ".", en: ",", fr: ".", pt: ".", ar: ".",
+};
+function num(n) {
+  const sep = numSeparators[currentLang] || ".";
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const loader = document.querySelector(".loader-container");
   const notification = document.querySelector(".notification");
@@ -19,12 +43,45 @@ document.addEventListener("DOMContentLoaded", function () {
   const icon_close = document.querySelector(".popup .icon.close");
   const btn_close = document.querySelector(".notification .btn");
 
-  const now = new Date();
-  const dayName = getDayName(now.getDay());
-  const day = now.getDate();
-  const monthName = getMonthName(now.getMonth());
-  const year = now.getFullYear();
-  date.textContent = `${dayName}, ${day} de ${monthName}, ${year}`;
+  if (date) {
+    date.textContent = new Intl.DateTimeFormat(currentLang, {
+      weekday: "long", year: "numeric", month: "long", day: "numeric",
+    }).format(new Date());
+  }
+
+  // Selector de idioma (dropdown) + recuerda la elección manual en una cookie
+  const langSwitcher = document.querySelector("[data-lang-switcher]");
+  if (langSwitcher) {
+    const langTrigger = langSwitcher.querySelector(".lang-switcher__trigger");
+    const langMenu = langSwitcher.querySelector(".lang-switcher__menu");
+
+    const setMenu = (open) => {
+      langMenu.classList.toggle("is-open", open);
+      langTrigger.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    langTrigger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setMenu(!langMenu.classList.contains("is-open"));
+    });
+
+    document.addEventListener("click", function () {
+      setMenu(false);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setMenu(false);
+    });
+
+    langSwitcher.querySelectorAll(".lang-switcher__option").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        const code = this.getAttribute("lang");
+        if (code) {
+          document.cookie = "fp_lang=" + code + "; path=/; max-age=63072000; SameSite=Lax";
+        }
+      });
+    });
+  }
 
   to_sign.addEventListener("click", function () {
     if (!social_networks_container.classList.contains("hidden"))
@@ -78,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const name = input_sign_name.value;
     const email = input_sign_mail.value;
     to_sign.classList.add("loading", "disabled");
-    to_sign.textContent = "Enviando...";
+    to_sign.textContent = t("sending");
     loader.classList.remove("hidden");
 
     await sign(name, email);
@@ -103,20 +160,21 @@ document.addEventListener("DOMContentLoaded", function () {
           email, subject, msg,
           website: document.getElementById("contact-website")?.value || "",
           csrf_token: getCsrfToken(),
+          lang: currentLang,
         }),
       });
       const result = await res.json();
 
       if (result.status) {
-        setPopup(false, "¡Se ha enviado el mensaje correctamente! En breve lo revisaremos.");
+        setPopup(false, t("msg_ok"));
         document.querySelector(".input-sign.mail-contact").value = "";
         document.querySelector(".input-sign.subject").value = "";
         document.querySelector(".msg textarea").value = "";
       } else {
-        setPopup(true, result.text || "No se ha podido enviar el mensaje.");
+        setPopup(true, result.text || t("msg_fail"));
       }
     } catch {
-      setPopup(true, "No se ha podido enviar el mensaje.");
+      setPopup(true, t("msg_fail"));
     }
 
     loader.classList.add("hidden");
@@ -200,7 +258,7 @@ function setPopup(error, msg) {
 function loadConfig() {
   return fetch(url_config).then((response) => {
     if (!response.ok) {
-      setPopup(true, "Error al cargar el archivo de configuración");
+      setPopup(true, t("config_error"));
       throw new Error("HTTP " + response.status);
     }
     return response.json();
@@ -237,7 +295,7 @@ function resetSignButton() {
   const btn = document.querySelector(".to-sign");
   if (!btn) return;
   btn.classList.remove("loading", "disabled");
-  btn.textContent = "Firmar aquí";
+  btn.textContent = t("sign_btn");
 }
 
 async function sign(name, email) {
@@ -252,7 +310,7 @@ async function sign(name, email) {
     }
 
     const base = getCurrentDomain();
-    const params = `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&randomString=${randomString}`;
+    const params = `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&randomString=${randomString}&lang=${currentLang}`;
     const validateUrl = `${base}/backend/save_signature.php?${params}&action=Sign`;
     const cancelUrl = `${base}/backend/save_signature.php?${params}&action=CancelSign`;
 
@@ -262,19 +320,20 @@ async function sign(name, email) {
       body: JSON.stringify({
         action: "send_user", name, email, validateUrl, cancelUrl, baseUrl: base,
         csrf_token: getCsrfToken(),
+        lang: currentLang,
       }),
     });
     const emailResult = await emailRes.json();
 
     if (emailResult.status) {
-      setPopup(false, "Se ha enviado un correo de confirmación a: " + email + ". Revise la bandeja de entrada");
+      setPopup(false, t("sign_confirm_email", { email }));
       document.querySelector(".input-sign.mail").value = "";
       document.querySelector(".input-sign.name").value = "";
     } else {
-      setPopup(true, "Error al enviar el correo electrónico. Por favor, intente firmar de nuevo");
+      setPopup(true, t("sign_email_error"));
     }
   } catch {
-    setPopup(true, "Error al procesar la solicitud");
+    setPopup(true, t("sign_process_error"));
   }
 }
 
@@ -290,19 +349,11 @@ function validateInput($this) {
   }
 }
 
-function getDayName(dayIndex) {
-  return ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"][dayIndex];
-}
-
-function getMonthName(monthIndex) {
-  return ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"][monthIndex];
-}
-
 function getData(url) {
   fetch(url)
     .then((response) => {
       if (!response.ok) {
-        setPopup(true, "Error en la conexión a internet");
+        setPopup(true, t("internet_error"));
         throw new Error("HTTP " + response.status);
       }
       return response.json();
@@ -310,8 +361,8 @@ function getData(url) {
     .then((data) => {
       const killedTotal = data.gaza.killed.total;
       const killedChildren = data.gaza.killed.children;
-      document.querySelector(".extra-info .sect1 > h3").textContent = killedTotal;
-      document.querySelector(".extra-info .sect2 > h3").textContent = killedChildren;
+      document.querySelector(".extra-info .sect1 > h3").textContent = num(killedTotal);
+      document.querySelector(".extra-info .sect2 > h3").textContent = num(killedChildren);
       const ld = document.getElementById("ld-casualties");
       if (ld) {
         try {

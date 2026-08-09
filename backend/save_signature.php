@@ -1,6 +1,16 @@
 <?php
     require_once 'load_env.php';
     require_once 'utils.php';
+    require_once 'i18n.php';
+
+    // Idioma del usuario: viene en el body (POST) o como parámetro (GET)
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $lang = $input['lang'] ?? 'es';
+    } else {
+        $lang = $_GET['lang'] ?? 'es';
+    }
+    i18n_init($lang);
 
     Utils::start_secure_session();
     Utils::send_security_headers();
@@ -10,12 +20,11 @@
     define('MAX_RANDOM_LEN', 64);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $input = json_decode(file_get_contents('php://input'), true);
         $submitted_token = $input['csrf_token'] ?? '';
         if (empty($submitted_token) || $submitted_token !== ($_SESSION['csrf_token'] ?? '')) {
             http_response_code(403);
             header('Content-Type: application/json');
-            echo json_encode(['status' => false, 'text' => 'Solicitud inválida.']);
+            echo json_encode(['status' => false, 'text' => t('backend.invalid_request') . '.']);
             exit;
         }
     }
@@ -39,7 +48,7 @@
         http_response_code(429);
         header('Content-Type: application/json');
         Utils::log('rate_limit', "IP: $ip, endpoint: save_signature");
-        echo json_encode(['status' => false, 'text' => 'Demasiadas solicitudes. Intente más tarde.']);
+        echo json_encode(['status' => false, 'text' => t('backend.too_many_requests')]);
         exit;
     }
 
@@ -54,6 +63,8 @@
     $GLOBALS['encryption_key'] = $encryption_key;
     $GLOBALS['cipher_method'] = $cipher_method;
     $baseUrl = Utils::get_base_url();
+    // Página de inicio en el idioma del usuario (para las redirecciones tras confirmar/cancelar)
+    $homeUrl = current_lang() === 'es' ? $baseUrl : $baseUrl . '/' . current_lang();
     $codes = Utils::readJsonFile($file_code);
     $signatures = Utils::readJsonFile($file);
 
@@ -90,10 +101,10 @@
                         Utils::writeJsonFile($file_code, array_values($codes));
                     }
                     Utils::log('sign_confirm', "Email: $email, Name: $name");
-                    header("Location: ".$baseUrl."?sign=true");
+                    header("Location: ".$homeUrl."?sign=true");
                 } else {
                     Utils::log('sign_confirm_rejected', "Email: $email");
-                    header("Location: ".$baseUrl."?sign=error");
+                    header("Location: ".$homeUrl."?sign=error");
                 }
                 break;
 
@@ -103,7 +114,7 @@
 
                 if (!$valid) {
                     Utils::log('sign_cancel_rejected', "Email: $email");
-                    header("Location: ".$baseUrl."?sign=error");
+                    header("Location: ".$homeUrl."?sign=error");
                     break;
                 }
 
@@ -117,20 +128,20 @@
                     Utils::writeJsonFile($file_code, array_values($codes));
                     Utils::deleteExistingSignature($signatures, $email, $file);
                     Utils::log('sign_cancel', "Email: $email (pendiente)");
-                    header("Location: ".$baseUrl."?sign=false");
+                    header("Location: ".$homeUrl."?sign=false");
                 } elseif ($sigIndex !== null) {
                     unset($signatures[$sigIndex]);
                     Utils::writeJsonFile($file, array_values($signatures));
                     Utils::log('sign_cancel', "Email: $email (confirmada)");
-                    header("Location: ".$baseUrl."?sign=false");
+                    header("Location: ".$homeUrl."?sign=false");
                 } else {
                     Utils::log('sign_cancel_rejected', "Email: $email");
-                    header("Location: ".$baseUrl."?sign=error");
+                    header("Location: ".$homeUrl."?sign=error");
                 }
                 break;
 
             default:
-                header("Location: ".$baseUrl);
+                header("Location: ".$homeUrl);
                 break;
         }
     } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -147,13 +158,13 @@
 
                 if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[A-Za-z0-9]+$/', $randomString)) {
                     Utils::log('sign_invalid', "Email: $email");
-                    echo json_encode(["status" => false, "text" => "Datos de firma inválidos"]);
+                    echo json_encode(["status" => false, "text" => t('backend.invalid_signature_data')]);
                     break;
                 }
 
                 if (Utils::hasPendingCode($codes, $email)) {
                     Utils::log('sign_duplicate_pending', "Email: $email");
-                    echo json_encode(["status" => false, "text" => "Ya tienes una firma pendiente de confirmar. Revisa tu correo."]);
+                    echo json_encode(["status" => false, "text" => t('backend.pending_signature')]);
                     break;
                 }
 
@@ -166,18 +177,18 @@
                     echo json_encode(["status" => true, "text" => ""]);
                 } else {
                     Utils::log('sign_duplicate', "Email: $email");
-                    echo json_encode(["status" => false, "text" => "Ya has firmado con este nombre de correo electrónico"]);
+                    echo json_encode(["status" => false, "text" => t('backend.already_signed')]);
                 }
 
                 break;
 
             default:
                 http_response_code(400);
-                echo json_encode(["status" => false, "text" => "Petición inválida"]);
+                echo json_encode(["status" => false, "text" => t('backend.invalid_request')]);
                 break;
         }
     } else {
         http_response_code(405);
         header('Content-Type: application/json');
-        echo json_encode(["status" => false, "text" => "Petición inválida"]);
+        echo json_encode(["status" => false, "text" => t('backend.invalid_request')]);
     }
