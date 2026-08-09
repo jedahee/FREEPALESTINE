@@ -22,3 +22,7 @@ Thumbs.db
 # Archivos temporales / pruebas
 *.tmp
 *.bak
+
+# Pack de stickers y script de pruebas de correo
+fp-*.zip
+backend/test_emails.php
