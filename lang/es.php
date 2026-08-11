@@ -130,7 +130,7 @@ return [
                     ['title' => 'Al Jazeera', 'desc' => 'Cobertura directa desde Gaza y análisis regional.'],
                     ['title' => '+972 Magazine', 'desc' => 'Periodismo independiente israelí y palestino.'],
                     ['title' => 'The Electronic Intifada', 'desc' => 'Voces palestinas en primera persona.'],
-                    ['title' => 'Artículo 14', 'desc' => 'Testimonios y periodismo de investigación en español.'],
+                    ['title' => 'El Orden Mundial', 'desc' => 'Análisis geopolítico en español, con cobertura continua de Oriente Próximo.'],
                     ['title' => 'El Salto', 'desc' => 'Análisis en profundidad sobre Gaza y el contexto global.'],
                 ],
             ],

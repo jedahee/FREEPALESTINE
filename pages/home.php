@@ -87,7 +87,7 @@ try {
     <meta property="og:type" content="website">
     <meta property="og:locale" content="<?php echo current_locale(); ?>">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@freepalestine">
+    <meta name="twitter:site" content="@wwfreepalestine">
     <meta name="twitter:title" content="<?php echo Utils::e(t('meta.og_title')); ?>">
     <meta name="twitter:description" content="<?php echo Utils::e(t('meta.og_description')); ?>">
     <meta name="twitter:image" content="<?php echo Utils::get_base_url(); ?>/og-image.jpg">
@@ -222,7 +222,11 @@ try {
                 ],
                 "email" => "frpalestinee@gmail.com",
                 "sameAs" => [
-                    "https://github.com/jedahee/FreePalestine"
+                    "https://github.com/jedahee/FreePalestine",
+                    "https://www.tiktok.com/@www.freepalestine.es",
+                    "https://www.instagram.com/freepalestine.es/",
+                    "https://x.com/wwfreepalestine",
+                    "https://www.threads.com/@freepalestine.es"
                 ]
             ],
             [
@@ -670,21 +674,21 @@ try {
                     "https://www.buscalibre.es/libro-palestina-cien-anos-de-colonialismo-y-resistencia/9788412619904/p/54521215",
                 ],
                 'podcasts' => [
-                    "https://www.publico.es/podcasts/no-empezo-el-7-de-octubre.html",
-                    "https://www.youtube.com/watch?v=7YBs7F7WbO4",
-                    "https://www.podiumpodcast.com/podcasts/al-borde-de-una-segunda-nakba/",
+                    "https://www.ivoox.com/no-empezo-7-octubre_pr_posts_2841959_1.html",
+                    "https://www.ivoox.com/podcast-inshallah-un-viaje-a-palestina_sq_f11501034_1.html",
+                    "https://www.podiumpodcast.com/podcasts/punto-de-fuga-playser-em/episodio/3715142/",
                 ],
                 'boycott' => [
-                    "https://bdsmovement.net/es/guia-de-boicot-desinversion-y-sanciones",
-                    "https://www.es.rescop.org/que-puedo-hacer/",
-                    "https://www.es.rescop.org/productos-a-evitar/",
-                    "https://www.unrwa.es/donar/",
+                    "https://bdsmovement.net/es/Guide-to-BDS-Boycott",
+                    "https://rescop.org/campanas/bds/",
+                    "https://rescop.org/campanas/bds/boicot-economico/productos-a-evitar",
+                    "https://unrwa.es/emergencia-gaza/",
                 ],
                 'news' => [
                     "https://www.aljazeera.com/where/palestine/",
                     "https://972mag.com/",
                     "https://electronicintifada.net/",
-                    "https://www.articulo14.org/",
+                    "https://elordenmundial.com/",
                     "https://www.elsaltodiario.com/",
                 ],
             ],
@@ -700,21 +704,21 @@ try {
                     "https://www.buscalibre.es/libro-palestina-cien-anos-de-colonialismo-y-resistencia/9788412619904/p/54521215",
                 ],
                 'podcasts' => [
-                    "https://www.publico.es/podcasts/no-empezo-el-7-de-octubre.html",
-                    "https://www.youtube.com/watch?v=7YBs7F7WbO4",
-                    "https://www.podiumpodcast.com/podcasts/al-borde-de-una-segunda-nakba/",
+                    "https://www.ivoox.com/no-empezo-7-octubre_pr_posts_2841959_1.html",
+                    "https://www.ivoox.com/podcast-inshallah-un-viaje-a-palestina_sq_f11501034_1.html",
+                    "https://www.podiumpodcast.com/podcasts/punto-de-fuga-playser-em/episodio/3715142/",
                 ],
                 'boycott' => [
-                    "https://bdsmovement.net/es/guia-de-boicot-desinversion-y-sanciones",
-                    "https://www.es.rescop.org/que-puedo-hacer/",
-                    "https://www.es.rescop.org/productos-a-evitar/",
-                    "https://www.unrwa.es/donar/",
+                    "https://bdsmovement.net/es/Guide-to-BDS-Boycott",
+                    "https://rescop.org/campanas/bds/",
+                    "https://rescop.org/campanas/bds/boicot-economico/productos-a-evitar",
+                    "https://unrwa.es/emergencia-gaza/",
                 ],
                 'news' => [
                     "https://www.aljazeera.com/where/palestine/",
                     "https://972mag.com/",
                     "https://electronicintifada.net/",
-                    "https://www.articulo14.org/",
+                    "https://elordenmundial.com/",
                     "https://www.elsaltodiario.com/",
                 ],
             ],
@@ -738,7 +742,7 @@ try {
                     "https://www.bdsfrance.org/que-boycotter/",
                     "https://www.bdsfrance.org/participez/boycottez/",
                     "https://listebds.fr/",
-                    "https://www.unrwa.fr/",
+                    "https://www.unrwa.org/fr",
                 ],
                 'news' => [
                     "https://www.middleeasteye.net/fr",
