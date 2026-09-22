@@ -40,7 +40,7 @@ $base_url = Utils::get_base_url();
   <!-- /FAVICON -->
 
   <!-- STYLES -->
-  <link rel="stylesheet" href="<?php echo $base_url; ?>/style.css" />
+  <link rel="stylesheet" href="<?php echo $base_url; ?>/style.css?v=<?= @filemtime('style.css') ?>" />
   <!-- /STYLES -->
 
   <title>FREE PALESTINE — <?php echo Utils::e(t('error404.title')); ?></title>

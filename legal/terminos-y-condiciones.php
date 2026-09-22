@@ -29,7 +29,7 @@ if (!isset($GLOBALS['__i18n'])) i18n_init();
     <link rel="icon" href="./assets/media/favicon-32x32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="./assets/media/favicon-16x16.png" sizes="16x16" type="image/png" />
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=<?= @filemtime('style.css') ?>" />
 
     <title><?php echo Utils::e(t('legal.meta_terms.title')); ?></title>
     <script type="application/ld+json">

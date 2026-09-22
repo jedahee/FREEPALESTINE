@@ -8,6 +8,16 @@ Disallow: /backend/data/
 Disallow: /backend/logs/
 Disallow: /config/
 
+# Contenido subido por usuarios (documentos y archivos adjuntos de opiniones)
+Disallow: /uploads/
+
+# Páginas de paginación de La Voz Palestina (se indexa la primera página)
+Disallow: /la-voz-palestina?page=
+Disallow: /en/la-voz-palestina?page=
+Disallow: /fr/la-voz-palestina?page=
+Disallow: /pt/la-voz-palestina?page=
+Disallow: /ar/la-voz-palestina?page=
+
 # Archivos sensibles y de configuración
 Disallow: /*.json$
 Disallow: /*.log$

@@ -222,6 +222,10 @@ function hreflang_links() {
             'url' => lang_url($code),
         ];
     }
+    $links[] = [
+        'hreflang' => 'x-default',
+        'url' => lang_url('es'),
+    ];
     return $links;
 }
 
