@@ -8,11 +8,6 @@
   padding-right: var(--sp-lg);
 }
 
-[dir="rtl"] header.hero .milestone-connector {
-  left: auto;
-  right: calc(50% + 20px);
-}
-
 [dir="rtl"] footer .footer-section a:hover {
   padding-left: 0;
   padding-right: 4px;
@@ -21,4 +16,39 @@
 [dir="rtl"] .goal-popup__close {
   right: auto;
   left: var(--sp-md);
+}
+
+/* Flecha del enlace colaborador: apunta hacia la izquierda en RTL */
+[dir="rtl"] .extra-info__credit .extra-info__credit-arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .extra-info__credit:hover .extra-info__credit-arrow {
+  transform: scaleX(-1) translateX(4px);
+}
+
+[dir="rtl"] .btn-hero::after {
+  content: "↓";
+}
+
+/* La Voz Palestina (portada + listado + relacionadas): las flechas "leer/ver
+   todas" apuntan hacia la izquierda en RTL (dirección de lectura inversa). */
+[dir="rtl"] .opinion-card__read span,
+[dir="rtl"] .home-opinions__more span {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+/* Paginador: en RTL el flex invierte el orden visual, así que las flechas
+   prev/next deben invertirse para seguir apuntando a la dirección correcta. */
+[dir="rtl"] .opinions__pagination-prev,
+[dir="rtl"] .opinions__pagination-next {
+  transform: scaleX(-1);
+}
+
+/* Flecha del botón "volver" de la entrada: apunta a la izquierda en RTL */
+[dir="rtl"] .opinion-detail__back::before {
+  display: inline-block;
+  transform: scaleX(-1);
 }

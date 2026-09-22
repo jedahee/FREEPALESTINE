@@ -130,11 +130,12 @@
       }
     }
 
-    &--tiktok { --brand: #25f4ee; }
-    &--instagram { --brand: #e4405f; }
-    &--x { --brand: #e7e9ea; }
-    &--threads { --brand: #ffffff; }
   }
+
+  .social-card--tiktok { --brand: #25f4ee; }
+  .social-card--instagram { --brand: #e4405f; }
+  .social-card--x { --brand: #e7e9ea; }
+  .social-card--threads { --brand: #ffffff; }
 }
 
 @media (max-width: 992px) {

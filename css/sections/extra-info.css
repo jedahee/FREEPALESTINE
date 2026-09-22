@@ -40,7 +40,7 @@
       border-color: rgba(255, 255, 255, 0.15);
     }
 
-    h3 {
+    h2 {
       font-family: var(--font-display);
       font-size: clamp(3rem, 8vw, 6rem);
       color: var(--primary);
@@ -70,7 +70,7 @@
 
     & > section {
       padding: var(--sp-xl) var(--sp-md);
-      h3 { font-size: clamp(2.5rem, 12vw, 4rem); }
+      h2 { font-size: clamp(2.5rem, 12vw, 4rem); }
       p { font-size: var(--fs-small); }
     }
   }
