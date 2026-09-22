@@ -3,9 +3,17 @@
 require_once 'backend/load_env.php';
 require_once 'backend/utils.php';
 require_once 'backend/goals.php';
+require_once 'backend/events.php';
+require_once 'backend/opinions.php';
 require_once 'backend/i18n.php';
 
 if (!isset($GLOBALS['__i18n'])) i18n_init();
+
+$home_opinions = get_published_opinions();
+
+// URL y título de la campaña para los botones de compartir (home y popup de firma)
+$share_page_url = lang_url();
+$share_page_title = t('meta.og_title');
 
 session_start();
 if (empty($_SESSION['csrf_token'])) {
@@ -53,6 +61,7 @@ function get_gaza_casualties() {
 }
 
 $casualties = get_gaza_casualties();
+$pl_events = get_palestina_libre_events();
 
 $dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -109,12 +118,12 @@ try {
     <!-- /FAVICON -->
 
     <!-- STYLES -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=<?= @filemtime('style.css') ?>" />
 
     <!-- /STYLES -->
 
     <!-- SCRIPT -->
-    <script src="main.js" defer></script>
+    <script src="main.js?v=<?= @filemtime('main.js') ?>" defer></script>
     <!-- /SCRIPT -->
     
     <meta name="csrf-token" content="<?php echo $csrf_token; ?>">
@@ -279,21 +288,22 @@ try {
         ]
     ];
 
+    $goal = $goals[0];
+    $goal_signatures = (int) $goal["signatures"];
     $json_ld_milestones = [
         "@context" => "https://schema.org",
         "@type" => "ItemList",
         "name" => t('meta.milestones_name'),
         "description" => t('meta.milestones_desc', ['count' => t_num($total_signatures)]),
-        "numberOfItems" => count($goals),
-        "itemListElement" => array_map(function ($index, $goal) use ($total_signatures) {
-            $unlocked = $total_signatures >= $goal["signatures"];
-            return [
+        "numberOfItems" => 1,
+        "itemListElement" => [
+            [
                 "@type" => "ListItem",
-                "position" => $index + 1,
-                "name" => t('meta.goal_label', ['count' => t_num($goal["signatures"])]) . ($unlocked ? " · " . t('meta.goal_done') : " · " . t('meta.goal_locked')),
-                "description" => $unlocked ? t('goals.' . $goal["signatures"]) : t('meta.goal_to_discover')
-            ];
-        }, array_keys($goals), $goals)
+                "position" => 1,
+                "name" => t('meta.goal_label', ['count' => t_num($goal_signatures)]),
+                "description" => t('goals.' . $goal["signatures"])
+            ]
+        ]
     ];
     ?>
     <script type="application/ld+json"><?php echo json_encode($json_ld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?></script>
@@ -352,10 +362,31 @@ try {
       <p><?php echo t('notifications.sign_ok_social'); ?></p>
       <div class="share nt">
         <div class="notification__share">
-          <div class="icon icon-fb" onclick="shareOnFacebook()"></div>
-          <div class="icon icon-tw" onclick="shareOnTwitter()"></div>
-          <div class="icon icon-lk" onclick="shareOnLinkedIn()"></div>
-          <div class="icon icon-wh" onclick="shareOnWhatsApp()"></div>
+          <a class="opinion-share opinion-share--fb" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode($share_page_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_facebook')); ?>">
+            <span class="opinion-share__icon" aria-hidden="true"></span>
+            <span class="opinion-share__name">Facebook</span>
+          </a>
+          <a class="opinion-share opinion-share--x" href="https://x.com/intent/post?url=<?php echo rawurlencode($share_page_url); ?>&amp;text=<?php echo rawurlencode($share_page_title); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_x')); ?>">
+            <span class="opinion-share__icon" aria-hidden="true"></span>
+            <span class="opinion-share__name">X</span>
+          </a>
+          <a class="opinion-share opinion-share--lk" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode($share_page_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_linkedin')); ?>">
+            <span class="opinion-share__icon" aria-hidden="true"></span>
+            <span class="opinion-share__name">LinkedIn</span>
+          </a>
+          <a class="opinion-share opinion-share--wh" href="https://api.whatsapp.com/send?text=<?php echo rawurlencode($share_page_title . ' — ' . $share_page_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_whatsapp')); ?>">
+            <span class="opinion-share__icon" aria-hidden="true"></span>
+            <span class="opinion-share__name">WhatsApp</span>
+          </a>
+          <button class="opinion-share opinion-share--copy" type="button" data-url="<?php echo Utils::e($share_page_url); ?>" data-copied="<?php echo Utils::e(t('opinions.copied_link')); ?>" aria-label="<?php echo Utils::e(t('opinions.copy_link')); ?>" title="<?php echo Utils::e(t('opinions.copy_link')); ?>" onclick="copyOpinionLink(this)">
+            <span class="opinion-share__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+            </span>
+            <span class="opinion-share__name"><?php echo Utils::e(t('opinions.copy_link')); ?></span>
+          </button>
         </div>
       </div>
       <a class="btn btn-primary"><?php echo t('notifications.close'); ?></a>
@@ -389,165 +420,110 @@ try {
       <div class="hero-video-overlay" aria-hidden="true"></div>
       <div class="hero-top">
         <nav>
-          <div class="hero-top-bar">
-            <div class="date"><?php echo $fecha; ?></div>
-            <div class="lang-switcher" data-lang-switcher>
-              <div class="lang-switcher__wrap">
-                <button
-                  type="button"
-                  class="lang-switcher__trigger"
-                  aria-haspopup="listbox"
-                  aria-expanded="false"
-                  aria-label="<?php echo Utils::e(t('lang_switcher.label')); ?>"
-                >
-                  <img
-                    class="lang-switcher__flag"
-                    src="assets/svg/flags/<?php echo current_lang(); ?>.svg"
-                    alt=""
-                    width="24"
-                    height="16"
-                    aria-hidden="true"
-                  />
-                  <span class="lang-switcher__name"><?php echo i18n_langs()[current_lang()]['name']; ?></span>
-                  <span class="lang-switcher__caret" aria-hidden="true"></span>
-                </button>
-                <ul class="lang-switcher__menu" role="listbox" aria-label="<?php echo Utils::e(t('lang_switcher.label')); ?>">
-                <?php foreach (i18n_langs() as $code => $meta): ?>
-                  <li role="option" aria-selected="<?php echo $code === current_lang() ? 'true' : 'false'; ?>">
-                    <a
-                      href="<?php echo lang_url($code); ?>"
-                      class="lang-switcher__option<?php echo $code === current_lang() ? ' is-active' : ''; ?>"
-                      hreflang="<?php echo $meta['hreflang']; ?>"
-                      lang="<?php echo $meta['hreflang']; ?>"
-                      title="<?php echo Utils::e(t('lang_switcher.title') . ': ' . $meta['name']); ?>"
-                    >
-                      <img
-                        class="lang-switcher__flag"
-                        src="assets/svg/flags/<?php echo $code; ?>.svg"
-                        alt=""
-                        width="24"
-                        height="16"
-                        aria-hidden="true"
-                        loading="lazy"
-                      />
-                      <span class="lang-switcher__name"><?php echo $meta['name']; ?></span>
-                    </a>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
-              </div>
-              <span class="lang-switcher__new"><?php echo t('lang_switcher.new'); ?></span>
-            </div>
-          </div>
+          <?php include __DIR__ . '/partials/hero-top-bar.php'; ?>
         </nav>
         <h1><?php echo Utils::e(t('hero.title')); ?></h1>
         <p class="hero-subtitle"><?php echo Utils::e(t('hero.subtitle')); ?></p>
       </div>
 
       <?php
-        $current_goal_index = null;
-        foreach ($goals as $index => $goal) {
-          if ($total_signatures < $goal["signatures"]) {
-            $current_goal_index = $index;
-            break;
-          }
-        }
-
-        if ($current_goal_index !== null) {
-          $next_goal = $goals[$current_goal_index];
-          $prev_sig = $current_goal_index > 0 ? $goals[$current_goal_index - 1]["signatures"] : 0;
-          $next_goal_range = $next_goal["signatures"] - $prev_sig;
-          $next_goal_pct = min(100, round((($total_signatures - $prev_sig) / $next_goal_range) * 100, 2));
-        } else {
-          $next_goal_pct = 100;
-        }
+        // Meta común: una sola gran meta (ILP en el Congreso con 500.000 firmas)
+        $goal = $goals[0];
+        $goal_signatures = $goal["signatures"];
+        $goal_pct = min(100, round(($total_signatures / $goal_signatures) * 100, 2));
       ?>
 
-      <div class="milestone-stats">
-        <div class="stat-card">
-          <span class="stat-number"><?php echo t_num($total_signatures); ?></span>
-          <span class="stat-label"><?php echo t('stats.signatures'); ?></span>
+      <div class="hero-goal-card">
+        <span class="hero-goal-card__eyebrow"><?php echo t('stats.goal'); ?></span>
+        <div class="hero-goal-card__row">
+          <div class="hero-goal-card__count-wrap">
+            <span class="hero-goal-card__count"><?php echo t_num($total_signatures); ?></span>
+            <span class="hero-goal-card__of"><?php echo t('stats.of_goal', ['count' => t_num($goal_signatures)]); ?></span>
+          </div>
+          <div class="hero-goal-card__pct-wrap">
+            <span class="hero-goal-card__pct"><?php echo $goal_pct; ?>%</span>
+            <span class="hero-goal-card__pct-label"><?php echo t('stats.progress'); ?></span>
+          </div>
         </div>
-        <div class="stat-card">
-          <span class="stat-number"><?php echo count($goals); ?></span>
-          <span class="stat-label"><?php echo t('stats.goals'); ?></span>
+
+        <div
+          class="global-progress-track"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="<?php echo $goal_signatures; ?>"
+          aria-valuenow="<?php echo $total_signatures; ?>"
+          aria-label="<?php echo Utils::e(t('meta.milestones_name')); ?>"
+        >
+          <div class="global-progress-fill" style="width: <?php echo $goal_pct; ?>%;"></div>
         </div>
-        <div class="stat-card">
-          <span class="stat-number"><?php echo $next_goal_pct; ?>%</span>
-          <span class="stat-label"><?php echo t('stats.next_goal'); ?></span>
+
+        <p class="hero-goal-card__remaining"><?php echo t('stats.remaining', ['count' => t_num(max(0, $goal_signatures - $total_signatures))]); ?></p>
+        <p class="hero-goal-note"><?php echo t('campaign.goal_note', ['count' => t_num($goal_signatures)]); ?></p>
+
+        <div class="hero-goal-actions">
+          <a class="btn-hero hero-goal-actions__sign" href="<?php echo lang_url() . '#share_sign'; ?>"><?php echo t('hero.sign_btn'); ?></a>
         </div>
+        <?php if (t('campaign.cta_desc')): ?>
+        <p class="hero-goal-desc"><?php echo t('campaign.cta_desc'); ?></p>
+        <?php endif; ?>
       </div>
 
-      <div class="global-progress-track">
-        <div class="global-progress-fill" style="width: <?php echo $next_goal_pct; ?>%;"></div>
-      </div>
-
-      <div class="timeline-wrap">
-        <div class="timeline-track">
-          <?php
-            $milestone_count = count($goals);
-            foreach ($goals as $index => $goal):
-              $is_completed = $total_signatures >= $goal["signatures"];
-              $is_current = $index === $current_goal_index;
-              $is_locked = $current_goal_index !== null && $index > $current_goal_index;
-
-              if ($is_current) {
-                $prev = $index > 0 ? $goals[$index - 1]["signatures"] : 0;
-                $range = $goal["signatures"] - $prev;
-                $goal_pct = min(100, round((($total_signatures - $prev) / $range) * 100, 2));
-              } elseif ($is_completed) {
-                $goal_pct = 100;
-              } else {
-                $goal_pct = 0;
-              }
-
-              $dot_class = 'milestone-dot';
-              if ($is_completed) $dot_class .= ' done';
-              if ($is_current) $dot_class .= ' active';
-              if ($is_locked) $dot_class .= ' locked';
-          ?>
-            <div class="milestone <?php if ($is_locked) echo 'locked'; ?>">
-              <div class="<?php echo $dot_class; ?>">
-                <?php if ($is_completed): ?>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="4,12 9,17 20,6"/></svg>
-                <?php else: ?>
-                  <span><?php echo $index + 1; ?></span>
-                <?php endif; ?>
-              </div>
-              <div class="milestone-body">
-                <span class="milestone-count"><?php echo t_num($goal["signatures"]); ?></span>
-                <?php if (!$is_locked): ?>
-                  <p><?php echo t('goals.' . $goal["signatures"]); ?></p>
-                  <?php if ($is_current): ?>
-                    <div class="milestone-progress">
-                      <div class="milestone-progress-bar" style="width: <?php echo $goal_pct; ?>%;"></div>
-                    </div>
-                  <?php endif; ?>
-                  <?php if ($is_completed && !empty($goal["deliverable"])): ?>
-                    <button
-                      type="button"
-                      class="goal-deliverable"
-                      data-deliverable="<?php echo htmlspecialchars($goal["deliverable"]); ?>"
-                    >
-                      <?php echo $goal["deliverable"] === "stickers" ? t('milestones.deliverable_stickers') : t('milestones.deliverable_resources'); ?>
-                    </button>
-                  <?php endif; ?>
-                <?php endif; ?>
-              </div>
-              <?php if ($index < $milestone_count - 1): ?>
-                <div class="milestone-connector <?php if ($is_completed) echo 'done'; ?>"></div>
-              <?php endif; ?>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-
-      <a class="btn btn-hero" href="<?php echo lang_url() . '#share_sign'; ?>"><?php echo t('hero.sign_btn'); ?></a>
+      <a class="hero-casualties" href="#contador" aria-label="<?php echo Utils::e(t('extra_info.putomikel')); ?>">
+        <span class="hero-casualties__dot" aria-hidden="true"></span>
+        <span class="hero-casualties__item"><strong><?php echo t_num($casualties['killed']); ?></strong> <?php echo t('meta.casualties_killed'); ?></span>
+        <span class="hero-casualties__sep" aria-hidden="true">·</span>
+        <span class="hero-casualties__item"><strong><?php echo t_num($casualties['children']); ?></strong> <?php echo t('meta.casualties_children'); ?></span>
+      </a>
     </header>
     <!-- /HERO HEADER -->
 
     <!-- CONTENT -->
     <main>
+
+      <!-- EXTRA INFO (contador de víctimas + fuente) -->
+      <article class="extra-info" id="contador">
+        <section class="sect1">
+          <h2><?php echo t_num($casualties['killed']); ?></h2>
+          <p><?php echo t('extra_info.killed'); ?></p>
+        </section>
+        <section class="sect2">
+          <h2><?php echo t_num($casualties['children']); ?></h2>
+          <p><?php echo t('extra_info.children'); ?></p>
+        </section>
+        <a class="extra-info__credit extra-info__credit--video" href="https://www.youtube.com/watch?v=DFIJk-zcSlY" target="_blank" rel="noopener">
+          <?php echo t('extra_info.putomikel'); ?><span class="extra-info__credit-arrow" aria-hidden="true">&nbsp;&rarr;</span>
+        </a>
+      </article>
+      <!-- /EXTRA INFO -->
+
+      <!-- LA VOZ PALESTINA: ÚLTIMAS OPINIONES -->
+      <?php $home_opinions_preview = array_slice($home_opinions, 0, 3); ?>
+      <section class="home-opinions" id="la-voz-palestina">
+        <header class="home-opinions__header">
+          <span class="lang-switcher__new home-opinions__badge"><?php echo t('opinions.badge'); ?></span>
+          <span class="eyebrow"><?php echo t('opinions.eyebrow'); ?></span>
+          <h2><?php echo t('opinions.title'); ?></h2>
+          <p><?php echo t('opinions.intro', ['count' => t_num(count($home_opinions))]); ?></p>
+        </header>
+
+        <?php if (!empty($home_opinions_preview)): ?>
+          <div class="opinions__grid home-opinions__grid">
+            <?php foreach ($home_opinions_preview as $entry): ?>
+              <?php include __DIR__ . '/partials/opinion-card.php'; ?>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <div class="opinions__empty">
+            <p><?php echo t('opinions.empty'); ?></p>
+          </div>
+        <?php endif; ?>
+
+        <div class="home-opinions__actions">
+          <a class="btn btn-primary" href="<?php echo lang_url('/'); ?>#share_opinion"><?php echo t('opinions.cta_btn'); ?></a>
+          <a class="home-opinions__more" href="<?php echo lang_url('/la-voz-palestina'); ?>">
+            <?php echo t('opinions.see_all'); ?><span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>      </section>
 
       <!-- BASIC INFO -->
       <section class="basic-info">
@@ -619,43 +595,121 @@ try {
       </section>
       <!-- /BASIC INFO -->
 
-      <!-- TINY BLOG -->
-      
-      <!-- /TINY BLOG -->
+      <!-- EVENTS: COLABORACIÓN CON PALESTINA LIBRE -->
+      <section class="events" id="eventos">
+        <span class="events__flag events__flag--palestine" aria-hidden="true"></span>
+        <span class="events__flag events__flag--andalucia" aria-hidden="true"></span>
 
-      <!-- EXTRA INFO -->
-      <article class="extra-info">
-        <section class="sect1">
-          <h3><?php echo t_num($casualties['killed']); ?></h3>
-          <p><?php echo t('extra_info.killed'); ?></p>
-        </section>
-        <section class="sect2">
-          <h3><?php echo t_num($casualties['children']); ?></h3>
-          <p><?php echo t('extra_info.children'); ?></p>
-        </section>
-      </article>
-      <!-- /EXTRA INFO -->
+        <header class="events__header">
+          <span class="eyebrow"><?php echo t('events.eyebrow'); ?></span>
+          <h2><?php echo t('events.title'); ?></h2>
+          <p><?php echo t('events.intro'); ?></p>
+        </header>
+
+        <?php if (!empty($pl_events)): ?>
+        <div class="events__grid">
+          <?php foreach ($pl_events as $ev): ?>
+            <article class="event-card">
+              <a class="event-card__link" href="<?php echo htmlspecialchars($ev['url'], ENT_QUOTES); ?>" target="_blank" rel="noopener">
+                <time class="event-card__date"><?php echo Utils::e(format_event_date($ev['start_date'])); ?></time>
+                <h3><?php echo Utils::e($ev['title']); ?></h3>
+                <?php if ($ev['venue'] !== '' || $ev['city'] !== ''): ?>
+                  <p class="event-card__place">
+                    <?php echo Utils::e(trim($ev['venue'] . ($ev['city'] !== '' ? ' · ' . $ev['city'] : ''))); ?>
+                  </p>
+                <?php endif; ?>
+                <?php if ($ev['excerpt'] !== ''): ?>
+                  <p class="event-card__excerpt"><?php echo Utils::e($ev['excerpt']); ?></p>
+                <?php endif; ?>
+                <span class="event-card__cta"><?php echo t('events.cta'); ?></span>
+              </a>
+            </article>
+          <?php endforeach; ?>
+        </div>
+        <?php else: ?>
+        <div class="events__empty">
+          <p><?php echo t('events.empty'); ?></p>
+        </div>
+        <?php endif; ?>
+
+        <div class="events__footer">
+          <a class="btn btn-primary" href="https://palestinalibre.es/events" target="_blank" rel="noopener">
+            <?php echo t('events.all_btn'); ?>
+            <span class="events__all-btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <p class="events__credit"><?php echo t('events.credit'); ?></p>
+        </div>
+
+        <div class="events__skyline" aria-hidden="true"></div>
+      </section>
+      <!-- /EVENTS -->
+
+      <!-- ORGANIZACIONES QUE APOYAN Y COLABORAN -->
+      <?php
+        $orgs = [
+            [
+                'name' => 'CNT Sevilla',
+                'url' => 'https://sevilla.cnt.es/',
+                'tag' => t('support.tag_union'),
+                'desc' => t('support.org_cnt'),
+                'initial' => 'CNT',
+                'logo' => 'assets/images/cnt-sevilla.webp',
+                'logo_alt' => 'Logo de CNT Sevilla',
+            ],
+            [
+                'name' => 'Palestina libre',
+                'url' => 'https://palestinalibre.es/',
+                'tag' => t('support.tag_events'),
+                'desc' => t('support.org_palestinalibre'),
+                'initial' => 'PL',
+                'logo' => 'assets/images/palestinalibre.webp',
+                'logo_alt' => 'Logo de Palestina libre',
+            ],
+        ];
+      ?>
+      <section class="support" id="colabora">
+        <header class="support__header">
+          <span class="eyebrow"><?php echo t('support.eyebrow'); ?></span>
+          <h2><?php echo t('support.title'); ?></h2>
+          <p><?php echo t('support.intro'); ?></p>
+        </header>
+
+        <div class="support__slider">
+          <button type="button" class="support__arrow support__arrow--prev" data-slider-prev aria-label="<?php echo Utils::e(t('support.prev_aria')); ?>">&lsaquo;</button>
+          <div class="support__track" data-slider-track tabindex="0" aria-label="<?php echo Utils::e(t('support.track_aria')); ?>">
+            <?php foreach ($orgs as $org): ?>
+              <article class="support-card">
+                <?php if (!empty($org['logo'])): ?>
+                  <img class="support-card__logo" src="<?php echo $org['logo']; ?>" alt="<?php echo Utils::e($org['logo_alt']); ?>" loading="lazy" width="256" height="256" />
+                <?php else: ?>
+                  <span class="support-card__mark" aria-hidden="true"><?php echo $org['initial']; ?></span>
+                <?php endif; ?>
+                <span class="support-card__tag"><?php echo $org['tag']; ?></span>
+                <h3 class="support-card__name"><?php echo Utils::e($org['name']); ?></h3>
+                <p class="support-card__desc"><?php echo $org['desc']; ?></p>
+                <a class="support-card__link" href="<?php echo $org['url']; ?>" target="_blank" rel="noopener">
+                  <?php echo t('support.visit'); ?><span aria-hidden="true">&nbsp;&rarr;</span>
+                </a>
+              </article>
+            <?php endforeach; ?>
+          </div>
+          <button type="button" class="support__arrow support__arrow--next" data-slider-next aria-label="<?php echo Utils::e(t('support.next_aria')); ?>">&rsaquo;</button>
+        </div>
+
+        <p class="support__join">
+          <?php echo t('support.join', [
+              'email' => '<a href="mailto:' . Utils::e(t('meta.email')) . '">' . Utils::e(t('meta.email')) . '</a>',
+              'social' => '<a href="#social">' . t('support.join_social') . '</a>',
+          ]); ?>
+        </p>
+      </section>
+      <!-- /ORGANIZACIONES -->
 
       <!-- RESOURCES -->
-      <?php
-        $resources_goal = null;
-        foreach ($goals as $goal) {
-          if (($goal["deliverable"] ?? "") === "recursos") {
-            $resources_goal = $goal;
-            break;
-          }
-        }
-      ?>
       <section class="resources" id="recursos">
         <header class="resources__header">
           <span class="eyebrow"><?php echo t('resources.eyebrow'); ?></span>
           <h2><?php echo t('resources.title'); ?></h2>
-          <?php if ($resources_goal): ?>
-            <span class="resources__badge">
-              <span class="resources__badge-dot" aria-hidden="true"></span>
-              <?php echo t('resources.badge', ['count' => t_num($resources_goal["signatures"])]); ?>
-            </span>
-          <?php endif; ?>
           <p><?php echo t('resources.intro'); ?></p>
         </header>
 
@@ -666,7 +720,7 @@ try {
                 'docs' => [
                     "https://www.rtve.es/play/videos/vivir-y-morir-en-gaza/",
                     "https://www.rtve.es/play/videos/en-portada/gaza-expediente-genocidio/",
-                    "https://www.arte.tv/es/videos/129995-000-A/arte-reportaje/",
+                    "https://www.arte.tv/es/videos/121653-000-A/arte-reportaje/",
                 ],
                 'books' => [
                     "https://www.penguinlibros.com/es/libros-de-historia/11467-libro-la-cuestion-palestina-9788499920108",
@@ -674,29 +728,29 @@ try {
                     "https://www.buscalibre.es/libro-palestina-cien-anos-de-colonialismo-y-resistencia/9788412619904/p/54521215",
                 ],
                 'podcasts' => [
-                    "https://www.ivoox.com/no-empezo-7-octubre_pr_posts_2841959_1.html",
+                    "https://www.ivoox.com/ldd19x16-palestina-existencia-negada-audios-mp3_rf_166891447_1.html",
                     "https://www.ivoox.com/podcast-inshallah-un-viaje-a-palestina_sq_f11501034_1.html",
-                    "https://www.podiumpodcast.com/podcasts/punto-de-fuga-playser-em/episodio/3715142/",
+                    "https://www.ivoox.com/ldd-religion-hebrea-origenes-evolucion-audios-mp3_rf_2399405_1.html",
                 ],
                 'boycott' => [
                     "https://bdsmovement.net/es/Guide-to-BDS-Boycott",
-                    "https://rescop.org/campanas/bds/",
-                    "https://rescop.org/campanas/bds/boicot-economico/productos-a-evitar",
+                    "https://bdsmovement.net/es/Boicotea",
+                    "https://bdsmovement.net/es/Companies-We-Target",
                     "https://unrwa.es/emergencia-gaza/",
                 ],
                 'news' => [
                     "https://www.aljazeera.com/where/palestine/",
                     "https://972mag.com/",
                     "https://electronicintifada.net/",
-                    "https://elordenmundial.com/",
-                    "https://www.elsaltodiario.com/",
+                    "https://elordenmundial.com/tag/palestina/",
+                    "https://www.elsaltodiario.com/temas/palestina",
                 ],
             ],
             'en' => [
                 'docs' => [
                     "https://www.rtve.es/play/videos/vivir-y-morir-en-gaza/",
                     "https://www.rtve.es/play/videos/en-portada/gaza-expediente-genocidio/",
-                    "https://www.arte.tv/es/videos/129995-000-A/arte-reportaje/",
+                    "https://www.arte.tv/es/videos/121653-000-A/arte-reportaje/",
                 ],
                 'books' => [
                     "https://www.penguinlibros.com/es/libros-de-historia/11467-libro-la-cuestion-palestina-9788499920108",
@@ -704,22 +758,22 @@ try {
                     "https://www.buscalibre.es/libro-palestina-cien-anos-de-colonialismo-y-resistencia/9788412619904/p/54521215",
                 ],
                 'podcasts' => [
-                    "https://www.ivoox.com/no-empezo-7-octubre_pr_posts_2841959_1.html",
-                    "https://www.ivoox.com/podcast-inshallah-un-viaje-a-palestina_sq_f11501034_1.html",
-                    "https://www.podiumpodcast.com/podcasts/punto-de-fuga-playser-em/episodio/3715142/",
+                    "https://al-shabaka.org/podcast/",
+                    "https://podcasts.apple.com/us/podcast/this-is-palestine/id1509337661",
+                    "https://www.bbc.co.uk/sounds/play/w3ct9bd8",
                 ],
                 'boycott' => [
                     "https://bdsmovement.net/es/Guide-to-BDS-Boycott",
-                    "https://rescop.org/campanas/bds/",
-                    "https://rescop.org/campanas/bds/boicot-economico/productos-a-evitar",
+                    "https://bdsmovement.net/es/Boicotea",
+                    "https://bdsmovement.net/es/Companies-We-Target",
                     "https://unrwa.es/emergencia-gaza/",
                 ],
                 'news' => [
                     "https://www.aljazeera.com/where/palestine/",
                     "https://972mag.com/",
                     "https://electronicintifada.net/",
-                    "https://elordenmundial.com/",
-                    "https://www.elsaltodiario.com/",
+                    "https://elordenmundial.com/tag/palestina/",
+                    "https://www.elsaltodiario.com/temas/palestina",
                 ],
             ],
             'fr' => [
@@ -745,11 +799,11 @@ try {
                     "https://www.unrwa.org/fr",
                 ],
                 'news' => [
-                    "https://www.middleeasteye.net/fr",
-                    "https://orientxxi.info/",
+                    "https://www.middleeasteye.net/fr/tags/palestine",
+                    "https://orientxxi.info/palestine",
                     "https://www.france-palestine.org/",
-                    "https://www.amnesty.fr/",
-                    "https://www.monde-diplomatique.fr/",
+                    "https://www.amnesty.fr/nos-combats/palestine",
+                    "https://www.monde-diplomatique.fr/index/mot/palestine",
                 ],
             ],
             'pt' => [
@@ -775,22 +829,22 @@ try {
                     "https://www.unrwa.org/",
                 ],
                 'news' => [
-                    "https://www.brasildefato.com.br/",
-                    "https://www.cartacapital.com.br/",
-                    "https://www.monitordooriente.com/",
-                    "https://jornalggn.com.br/",
-                    "https://operamundi.uol.com.br/",
+                    "https://www.brasildefato.com.br/topicos/palestina",
+                    "https://www.cartacapital.com.br/tag/palestina/",
+                    "https://www.monitordooriente.com/category/palestina/",
+                    "https://jornalggn.com.br/tag/palestina",
+                    "https://operamundi.uol.com.br/tag/palestina/",
                 ],
             ],
             'ar' => [
                 'docs' => [
                     "https://www.ajiunit.com/ar/investigation/%D8%BA%D8%B2%D8%A9/",
                     "https://www.ajiunit.com/ar/article/%D8%B4%D9%87%D8%A7%D8%AF%D8%A7%D8%AA-%D9%85%D9%86-%D8%BA%D8%B2%D8%A9/",
-                    "http://doc.aljazeera.net/",
+                    "https://doc.aljazeera.net/?s=%D8%BA%D8%B2%D8%A9",
                 ],
                 'books' => [
                     "https://www.palestine-studies.org/ar/node/1659088",
-                    "https://studies.aljazeera.net/ar",
+                    "https://studies.aljazeera.net/ar/article/5875",
                     "https://pchrgaza.org/ar/category/genocide-on-gaza-ar/",
                 ],
                 'podcasts' => [
@@ -805,10 +859,10 @@ try {
                     "https://www.unrwa.org/ar/",
                 ],
                 'news' => [
-                    "https://www.aljazeera.net/",
-                    "http://doc.aljazeera.net/",
+                    "https://www.aljazeera.net/where/palestine",
+                    "https://doc.aljazeera.net/?s=%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86",
                     "https://pchrgaza.org/ar/",
-                    "https://studies.aljazeera.net/ar",
+                    "https://studies.aljazeera.net/ar/article/6364",
                     "https://www.palestine-studies.org/ar",
                 ],
             ],
@@ -854,7 +908,7 @@ try {
 
       <!-- SHARE -->
       <section id="contact_share">
-        <article id="share_sign" class="share">
+        <article id="share_sign" class="share form-card">
           <header class="form-card__header">
             <span class="eyebrow"><?php echo t('share.eyebrow'); ?></span>
             <h2><?php echo t('share.title'); ?></h2>
@@ -884,7 +938,7 @@ try {
               </div>
             </div>
 
-            <a class="btn btn-second to-sign disabled"><?php echo t('share.sign_btn'); ?></a>
+            <button type="button" class="btn btn-second to-sign disabled"><?php echo t('share.sign_btn'); ?></button>
 
             <p class="tos_text">
               <?php echo t('share.tos', [
@@ -896,54 +950,152 @@ try {
             </p>
           </form>
           <div class="links">
-            <a href="javascript:void(0)" class="btn btn-primary social-networks"
-              ><?php echo t('share.share_btn'); ?></a
+            <button type="button" class="btn btn-primary social-networks">
+              <?php echo t('share.share_btn'); ?></button
             >
           </div>
           <div class="share__networks-container hidden">
-            <div class="icon icon-fb" onclick="shareOnFacebook()"></div>
-            <div class="icon icon-tw" onclick="shareOnTwitter()"></div>
-            <div class="icon icon-lk" onclick="shareOnLinkedIn()"></div>
-            <div class="icon icon-wh" onclick="shareOnWhatsApp()"></div>
+            <a class="opinion-share opinion-share--fb" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode($share_page_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_facebook')); ?>">
+              <span class="opinion-share__icon" aria-hidden="true"></span>
+              <span class="opinion-share__name">Facebook</span>
+            </a>
+            <a class="opinion-share opinion-share--x" href="https://x.com/intent/post?url=<?php echo rawurlencode($share_page_url); ?>&amp;text=<?php echo rawurlencode($share_page_title); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_x')); ?>">
+              <span class="opinion-share__icon" aria-hidden="true"></span>
+              <span class="opinion-share__name">X</span>
+            </a>
+            <a class="opinion-share opinion-share--lk" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode($share_page_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_linkedin')); ?>">
+              <span class="opinion-share__icon" aria-hidden="true"></span>
+              <span class="opinion-share__name">LinkedIn</span>
+            </a>
+            <a class="opinion-share opinion-share--wh" href="https://api.whatsapp.com/send?text=<?php echo rawurlencode($share_page_title . ' — ' . $share_page_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo Utils::e(t('opinions.share_whatsapp')); ?>">
+              <span class="opinion-share__icon" aria-hidden="true"></span>
+              <span class="opinion-share__name">WhatsApp</span>
+            </a>
+            <button class="opinion-share opinion-share--copy" type="button" data-url="<?php echo Utils::e($share_page_url); ?>" data-copied="<?php echo Utils::e(t('opinions.copied_link')); ?>" aria-label="<?php echo Utils::e(t('opinions.copy_link')); ?>" title="<?php echo Utils::e(t('opinions.copy_link')); ?>" onclick="copyOpinionLink(this)">
+              <span class="opinion-share__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+              </span>
+              <span class="opinion-share__name"><?php echo Utils::e(t('opinions.copy_link')); ?></span>
+            </button>
           </div>
         </article>
-        <article class="contact">
+        <article class="opinion form-card" id="share_opinion">
           <header class="form-card__header">
-            <span class="eyebrow"><?php echo t('contact.eyebrow'); ?></span>
-            <h2><?php echo t('contact.title'); ?></h2>
-            <p><?php echo t('contact.subtitle'); ?></p>
+            <span class="eyebrow"><?php echo t('opinion.eyebrow'); ?></span>
+            <h2><?php echo t('opinion.title'); ?></h2>
+            <p><?php echo t('opinion.subtitle'); ?></p>
           </header>
           <form>
-            <div class="share__sign__input-container mail">
-              <label for="contact-email"><?php echo t('contact.email_label'); ?></label>
-              <input
-                id="contact-email"
-                class="input-sign mail-contact"
-                placeholder="<?php echo Utils::e(t('contact.email_placeholder')); ?>"
-                type="email"
-                minlength="0"
-              />
+            <div class="form-row">
+              <div class="share__sign__input-container name">
+                <label for="op-name"><?php echo t('opinion.name_label'); ?></label>
+                <input
+                  id="op-name"
+                  class="input-sign op-name"
+                  placeholder="<?php echo Utils::e(t('opinion.name_placeholder')); ?>"
+                  type="text"
+                  minlength="0"
+                />
+              </div>
+              <div class="share__sign__input-container mail">
+                <label for="op-email"><?php echo t('opinion.email_label'); ?></label>
+                <input
+                  id="op-email"
+                  class="input-sign mail-contact"
+                  placeholder="<?php echo Utils::e(t('opinion.email_placeholder')); ?>"
+                  type="email"
+                  minlength="0"
+                />
+              </div>
             </div>
             <div class="share__sign__input-container subject">
-              <label for="contact-subject"><?php echo t('contact.subject_label'); ?></label>
+              <label for="op-subject"><?php echo t('opinion.subject_label'); ?></label>
               <input
-                id="contact-subject"
+                id="op-subject"
                 class="input-sign subject"
-                placeholder="<?php echo Utils::e(t('contact.subject_placeholder')); ?>"
+                placeholder="<?php echo Utils::e(t('opinion.subject_placeholder')); ?>"
                 type="text"
                 minlength="0"
               />
             </div>
+            <div class="form-row">
+              <div class="share__sign__input-container author-url">
+                <label for="op-author-url"><?php echo t('opinion.author_url_label'); ?></label>
+                <input
+                  id="op-author-url"
+                  class="input-sign op-author-url"
+                  placeholder="<?php echo Utils::e(t('opinion.author_url_placeholder')); ?>"
+                  type="url"
+                  minlength="0"
+                />
+              </div>
+              <div class="share__sign__input-container opinion-image">
+                <label for="op-image"><?php echo t('opinion.image_label'); ?></label>
+                <input
+                  id="op-image"
+                  class="input-sign op-image"
+                  placeholder="<?php echo Utils::e(t('opinion.image_placeholder')); ?>"
+                  type="url"
+                  minlength="0"
+                />
+              </div>
+            </div>
             <div class="share__sign__input-container msg">
-              <label for="contact-msg"><?php echo t('contact.msg_label'); ?></label>
-              <textarea id="contact-msg" placeholder="<?php echo Utils::e(t('contact.msg_placeholder')); ?>"></textarea>
+              <label for="op-msg"><?php echo t('opinion.msg_label'); ?></label>
+              <div class="md-editor">
+                <div class="md-toolbar" role="toolbar" aria-label="<?php echo Utils::e(t('opinion.md_toolbar')); ?>">
+                  <button type="button" class="md-btn" data-md="h1" title="<?php echo Utils::e(t('opinion.md_h1')); ?>">H1</button>
+                  <button type="button" class="md-btn" data-md="h2" title="<?php echo Utils::e(t('opinion.md_h2')); ?>">H2</button>
+                  <button type="button" class="md-btn" data-md="h3" title="<?php echo Utils::e(t('opinion.md_heading')); ?>">H3</button>
+                  <span class="md-sep" aria-hidden="true"></span>
+                  <button type="button" class="md-btn" data-md="bold" title="<?php echo Utils::e(t('opinion.md_bold')); ?>"><strong>B</strong></button>
+                  <button type="button" class="md-btn" data-md="italic" title="<?php echo Utils::e(t('opinion.md_italic')); ?>"><em>I</em></button>
+                  <button type="button" class="md-btn" data-md="code" title="<?php echo Utils::e(t('opinion.md_code')); ?>"><code>&lt;/&gt;</code></button>
+                  <span class="md-sep" aria-hidden="true"></span>
+                  <button type="button" class="md-btn" data-md="quote" title="<?php echo Utils::e(t('opinion.md_quote')); ?>">”</button>
+                  <button type="button" class="md-btn" data-md="ul" title="<?php echo Utils::e(t('opinion.md_bullets')); ?>">• Lista</button>
+                  <button type="button" class="md-btn" data-md="ol" title="<?php echo Utils::e(t('opinion.md_numbers')); ?>">1. Lista</button>
+                  <span class="md-sep" aria-hidden="true"></span>
+                  <button type="button" class="md-btn" data-md="link" title="<?php echo Utils::e(t('opinion.md_link')); ?>">🔗 Enlace</button>
+                </div>
+                <textarea id="op-msg" class="md-editor__textarea" placeholder="<?php echo Utils::e(t('opinion.msg_placeholder')); ?>"></textarea>
+                <div class="md-preview" hidden aria-live="polite"></div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="share__sign__input-container opinion-image">
+                <label class="file-hint" for="op-image-file"><?php echo t('opinion.attach_image'); ?></label>
+                <input id="op-image-file" class="op-file op-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+              </div>
             </div>
             <div class="website sr-only" aria-hidden="true">
-              <label for="contact-website"><?php echo t('contact.honeypot_label'); ?></label>
-              <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              <label for="op-website" aria-hidden="true">&nbsp;</label>
+              <input id="op-website" name="website" type="text" tabindex="-1" autocomplete="off" />
             </div>
-            <a class="send-email btn btn-second disabled"><?php echo t('contact.send_btn'); ?></a>
+            <div class="form-divider" role="separator" aria-hidden="true">
+              <span class="form-divider__line"></span>
+            </div>
+            <div class="opinion__alt">
+              <p class="tos_text opinion__mail-note opinion__mail-note--highlight"><?php echo t('opinion.email_alt_desc', [
+                  'email' => '<a href="mailto:' . Utils::e(t('meta.email')) . '">' . Utils::e(t('meta.email')) . '</a>',
+              ]); ?></p>
+              <div class="share__sign__input-container opinion-doc">
+                <label for="op-doc"><?php echo t('opinion.attach_doc'); ?></label>
+                <input id="op-doc" class="op-file op-doc" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              </div>
+            </div>
+            <p class="tos_text"><?php echo t('opinion.tos', [
+                'privacy' => '<a href="' . lang_url('/politica-de-privacidad') . '">' . t('share.tos_privacy') . '</a>',
+                'opiniones' => '<a href="' . lang_url('/la-voz-palestina') . '">' . t('opinion.page_title') . '</a>',
+            ]); ?></p>
+            <button type="button" class="send-email btn btn-second disabled"><?php echo t('opinion.send_btn'); ?></button>
           </form>
+          <div class="links">
+            <a class="btn btn-primary" href="<?php echo lang_url('/la-voz-palestina'); ?>"><?php echo t('opinion.see_published'); ?></a>
+          </div>
         </article>
       </section>
       <!-- /SHARE -->
@@ -1008,60 +1160,32 @@ try {
     <!-- FOOTER -->
     <footer>
       <div class="footer-section">
-        <h4><?php echo t('footer.brand'); ?></h4>
+        <h3><?php echo t('footer.brand'); ?></h3>
         <p><?php echo t('footer.desc'); ?></p>
         <p>
           <img class="footer-flag" src="assets/svg/flag-palestine.svg" alt="<?php echo Utils::e(t('footer.flag_alt')); ?>">
         </p>
       </div>
       <div class="footer-section">
-        <h4><?php echo t('footer.legal'); ?></h4>
+        <h3><?php echo t('footer.participate'); ?></h3>
+        <a href="<?php echo lang_url('/la-voz-palestina'); ?>"><?php echo t('footer.participate_opinions'); ?></a>
+        <a href="<?php echo lang_url('/#eventos'); ?>"><?php echo t('footer.participate_events'); ?></a>
+        <a href="<?php echo lang_url('/#colabora'); ?>"><?php echo t('footer.participate_support'); ?></a>
+      </div>
+      <div class="footer-section">
+        <h3><?php echo t('footer.legal'); ?></h3>
         <a href="<?php echo lang_url('/aviso-legal'); ?>"><?php echo t('footer.legal_aviso'); ?></a>
         <a href="<?php echo lang_url('/politica-de-privacidad'); ?>"><?php echo t('footer.legal_priv'); ?></a>
         <a href="<?php echo lang_url('/terminos-y-condiciones'); ?>"><?php echo t('footer.legal_terms'); ?></a>
       </div>
       <div class="footer-section">
-        <h4><?php echo t('footer.credits'); ?></h4>
+        <h3><?php echo t('footer.credits'); ?></h3>
         <a href="https://data.techforpalestine.org/" target="_blank" rel="noopener"><?php echo t('footer.credits_data'); ?></a>
         <a href="https://freepalestineproject.com/" target="_blank" rel="noopener"><?php echo t('footer.credits_gallery'); ?></a>
         <a href="https://github.com/jedahee/FreePalestine" target="_blank" rel="noopener"><?php echo t('footer.credits_github'); ?></a>
       </div>
     </footer>
     <!-- /FOOTER -->
-
-    <!-- GOAL POPUP: STICKERS -->
-    <div class="goal-popup hidden" id="goal-popup" role="dialog" aria-modal="true" aria-labelledby="goal-popup-title">
-      <div class="goal-popup__card">
-        <button type="button" class="goal-popup__close" data-close="goal-popup" aria-label="<?php echo Utils::e(t('goal_popup.close_aria')); ?>">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <span class="eyebrow"><?php echo t('goal_popup.eyebrow', ['count' => t_num(500)]); ?></span>
-        <h2 id="goal-popup-title"><?php echo t('goal_popup.title'); ?></h2>
-        <p class="goal-popup__intro">
-          <?php echo t('goal_popup.intro'); ?>
-        </p>
-        <div class="sticker-grid">
-          <img src="assets/stickers/sandia.png" alt="<?php echo Utils::e(t('goal_popup.stickers.sponsor')); ?>" loading="lazy" />
-          <img src="assets/stickers/paloma.png" alt="<?php echo Utils::e(t('goal_popup.stickers.zionism')); ?>" loading="lazy" />
-          <img src="assets/stickers/bandera.png" alt="<?php echo Utils::e(t('goal_popup.stickers.flag')); ?>" loading="lazy" />
-          <img src="assets/stickers/resistencia.png" alt="<?php echo Utils::e(t('goal_popup.stickers.resistencia')); ?>" loading="lazy" />
-          <img src="assets/stickers/corazon.png" alt="<?php echo Utils::e(t('goal_popup.stickers.heart')); ?>" loading="lazy" />
-          <img src="assets/stickers/megafono.png" alt="<?php echo Utils::e(t('goal_popup.stickers.keffiyeh')); ?>" loading="lazy" />
-          <img src="assets/stickers/cupula.png" alt="<?php echo Utils::e(t('goal_popup.stickers.chains')); ?>" loading="lazy" />
-          <img src="assets/stickers/libertad.png" alt="<?php echo Utils::e(t('goal_popup.stickers.freedom')); ?>" loading="lazy" />
-        </div>
-        <a class="btn btn-primary goal-popup__download" href="backend/download_stickers.php">
-          <?php echo t('goal_popup.download'); ?>
-        </a>
-        <p class="goal-popup__note">
-          <?php echo t('goal_popup.note', [
-              'maker' => '<strong>' . t('goal_popup.note_maker') . '</strong>',
-              'ly' => '<strong>' . t('goal_popup.note_ly') . '</strong>',
-          ]); ?>
-        </p>
-      </div>
-    </div>
-    <!-- /GOAL POPUP -->
 
     <script>
       window.I18N = <?php echo json_encode(js_i18n(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
