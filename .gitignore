@@ -5,9 +5,15 @@ backend/config/.env
 # Se mantienen fuera de git: en producción NO deben sobrescribirse.
 backend/data/*
 !backend/data/.gitkeep
+# Contenido publicado (no es dato de usuario): seed de opiniones del público
+!backend/data/opinions.json
 
 # Logs de seguridad
 backend/logs/
+
+# Adjuntos de usuarios del formulario de opinión (contenido generado)
+uploads/*
+!uploads/.gitkeep
 
 # Memoria de trabajo del asistente / notas de sesión
 .opencode/

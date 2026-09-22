@@ -8,7 +8,7 @@
 
 Este proyecto es una plataforma web creada para recolectar firmas en apoyo a la causa palestina. La web permite a los usuarios firmar una petición proporcionando su nombre completo y correo electrónico, y asegura que cada firma sea única y segura.
 
-La página incluye una campaña con **metas progresivas de firmas** (500, 1.000, 2.500, 5.000, 10.000, 20.000 y 50.000) que van desbloqueando entregas para visibilizar la causa, como un pack de stickers descargable.
+La página incluye un **objetivo común de firmas**: alcanzar las **500.000 firmas**, umbral legal de una Iniciativa Legislativa Popular (ILP) en España (Ley Orgánica 3/1984). Al llegar, se ceden todas las firmas a asociaciones pro-palestinas para registrar la ILP en el Congreso: el único mecanismo ciudadano que el Estado español está obligado a tramitar.
 
 ## Características
 
@@ -16,14 +16,17 @@ La página incluye una campaña con **metas progresivas de firmas** (500, 1.000,
 - **Validación de Firmas**: Se asegura que cada firma sea única y válida (verificación por correo con enlace de confirmación y cancelación).
 - **Almacenamiento Seguro**: Los datos de los usuarios se cifran con **AES-256-CBC** y se almacenan en un archivo JSON.
 - **Notificaciones por Correo**: Envía notificaciones por correo a los usuarios que firman y al administrador del sitio vía **SMTP** (Gmail, 500 correos/día) con respaldo automático a **EmailJS**.
-- **Metas de campaña**: Timeline de metas con barra de progreso relativa a la siguiente meta y entregas desbloqueables (stickers, recursos…).
-- **Pack de stickers**: Al superar las 500 firmas se desbloquea un popup con los 8 stickers originales y se descarga un ZIP (`backend/download_stickers.php`) para instalar en WhatsApp.
-- **Recursos de sensibilización**: Sección con documentales, libros, podcasts, guías de boicot y medios de análisis **en español** (entrega de la meta de 1000 firmas).
+- **Meta única (ILP)**: Barra de progreso global hacia las 500.000 firmas del objetivo común, con nota explicativa del mecanismo de ILP.
+- **Voz pública**: formulario de opiniones con adjuntos (PDF/Word e imagen, máx. 5 MB), web personal opcional y publicación editorial en `/la-voz-palestina` con JSON-LD.
+- **Opinión del público**: Formulario que sustituye al de contacto (`backend/send_email.php`); las mejores entradas se publican en la página `/la-voz-palestina` con autor (o anónimo), tiempo de lectura, categorías y etiquetas.
+- **Eventos y manifestaciones**: Agenda colaborativa con [palestinalibre.es](https://palestinalibre.es) vía su API REST de The Events Calendar (`backend/events.php`, caché 6h).
+- **Organizaciones colaboradoras**: Slider accesible con las organizaciones que apoyan la campaña (CNT Sevilla, Palestina libre…).
+- **Recursos de sensibilización**: Sección con documentales, libros, podcasts, guías de boicot y medios de análisis **en español**.
 - **Historias de resistencia**: Grid estático de tarjetas "El Grito de Palestina" enlazadas a reportajes y artículos reales.
 - **Cifras en vivo**: Contador de víctimas en Gaza (fallecidos y niños) obtenido de `data.techforpalestine.org` con caché server-side (TTL 1h).
 - **Video de fondo**: Hero con video de la causa palestina (autoplay, silenciado, en bucle) y overlay de scrim.
 - **Sin dependencias externas**: No se carga ningún script o CSS de CDN (Swiper y AOS eliminados); fuentes auto-hospedadas.
-- **SEO y datos estructurados**: Meta tags Open Graph/Twitter, JSON-LD (WebSite, Organization, WebPage, ItemList de historias y metas, Dataset de víctimas) con cifras dinámicas.
+- **SEO y datos estructurados**: Meta tags Open Graph/Twitter, JSON-LD (WebSite, Organization, WebPage, ItemList, Dataset de víctimas) con cifras dinámicas. La página `/la-voz-palestina` usa categorías y etiquetas como `articleSection` y `keywords` en cada `BlogPosting`.
 - **Interfaz Intuitiva**: Diseño simple y fácil de usar para garantizar una experiencia de usuario amigable.
 - **Soporte Multiplataforma**: Accesible desde dispositivos móviles y de escritorio.
 
@@ -46,23 +49,27 @@ FreePalestine/
 ├── .router.php            # Router para el servidor de desarrollo (php -S)
 ├── pages/
 │   ├── home.php           # Página principal
+│   ├── opinions.php       # Página /la-voz-palestina (opinión del público)
 │   └── 404.php            # Página de error
 ├── legal/                 # Aviso legal, privacidad y términos
 ├── backend/
 │   ├── save_signature.php # Guardado y validación de firmas
-│   ├── send_email.php     # Envío de correos (EmailJS)
-│   ├── download_stickers.php # Genera ZIP del pack de stickers
-│   ├── goals.php          # Definición de metas de la campaña
+│   ├── send_email.php     # Envío de correos (EmailJS) + adjuntos del formulario (uploads/)
+│   ├── download_stickers.php # Genera ZIP del pack de stickers (fuera de la UI, conservado)
+│   ├── goals.php          # Objetivo común de la campaña (ILP 500k)
+│   ├── events.php         # Agenda de palestinalibre.es (API + caché)
+│   ├── opinions.php       # Lectura de opiniones publicadas
 │   ├── utils.php          # Cifrado/descifrado y utilidades
 │   ├── load_env.php       # Carga del .env
-│   ├── data/              # signatures.json, codes.json, casualties_cache.json
+│   ├── data/              # signatures.json, codes.json, casualties_cache.json, opinions.json, palestinalibre_events_cache.json
 │   └── config/.env        # Variables de entorno (NO subir a git)
 ├── assets/
 │   ├── video/             # Video del hero
 │   ├── images/            # Imágenes de la web
 │   ├── media/             # Favicons
-│   ├── stickers/          # Pack de stickers (PNG y SVG fuente)
+│   ├── stickers/          # Pack de stickers (PNG y SVG fuente, sin uso en la UI)
 │   └── svg/               # Iconos y bandera
+├── uploads/                # Adjuntos del formulario de opinión (ignorado por git)
 ├── config/config.json     # Configuración de endpoints
 ├── css/                   # Estilos modulares (variables + por sección)
 ├── main.js                # Lógica del frontend (sign, share, data, popup)
@@ -129,6 +136,21 @@ Si deseas contribuir al proyecto, por favor sigue estos pasos:
 
 - **Regenerar stickers PNG**: exporta desde los SVG de `assets/stickers/svg/` con **librsvg** (`rsvg-convert` o Python `gi Rsvg`) para conservar la transparencia. ImageMagick (sin `rsvg-convert`) aplanaba el fondo a blanco.
 - **Entorno local**: `php -S 127.0.0.1:8000 .router.php` (el `.htaccess` no aplica con el built-in server).
+
+## Categorías, etiquetas y datos estructurados
+
+Las opiniones del público usan **categorías** (sección temática: `Opinión`, `Análisis`…) y **etiquetas** (temas concretos: `Gaza`, `BDS`…), siguiendo el modelo de "La voz afiliada" de CNT Sevilla. Cada entrada de `backend/data/opinions.json` define `categories` y `tags`.
+
+Para SEO, la página `/la-voz-palestina` emite JSON-LD (`@graph`) donde:
+
+- La colección es un `CollectionPage` con `hasPart` hacia cada entrada.
+- Cada entrada es un `BlogPosting` con:
+    - `articleSection` ← `categories`
+    - `keywords` ← `tags` unidos por coma
+    - `author` ← `Person` (con `url` si el autor tiene web; anónimo sin url)
+    - `datePublished`, `headline`, `description` (excerpt), `publisher` → `#organization`
+
+Así Google puede agrupar las entradas por sección y mostrar las etiquetas como temas tratados.
 
 ## Optimización de CSS (build)
 
