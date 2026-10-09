@@ -486,6 +486,10 @@ header.hero {
     .hero-casualties {
       border-radius: var(--br-lg);
       text-align: center;
+
+      .hero-casualties__dot {
+        display: none;
+      }
     }
   }
 }

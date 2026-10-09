@@ -68,10 +68,14 @@
     padding: var(--sp-xl) var(--sp-md);
     gap: var(--sp-md);
 
-    & > section {
+    & > .sect1,
+    & > .sect2 {
       padding: var(--sp-xl) var(--sp-md);
-      h2 { font-size: clamp(2.5rem, 12vw, 4rem); }
-      p { font-size: var(--fs-small); }
+      h2 {
+        font-size: clamp(3.5rem, 18vw, 6rem) !important;
+        margin-bottom: var(--sp-sm) !important;
+      }
+      p { font-size: clamp(0.95rem, 4vw, 1.15rem); }
     }
   }
 }
